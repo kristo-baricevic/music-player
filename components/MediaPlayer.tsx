@@ -83,9 +83,12 @@ const MusicPlayer: React.FC<MediaPlayerProps> = () => {
   return (
     <div ref={musicContainerRef} className="music-container" id="music-container">
       <div className="music-info">
-        <h4 ref={titleRef}></h4>
-        <div className="progress-container" ref={progressContainerRef} onClick={setProgress}>
+        <img className="cover-image" src="images/cover.png" />
+        <div className="flex flex-col px-2">
+        <h4 className="flex" ref={titleRef}>Angels, Gurus and Advertising</h4>
+        <div className="progress-container flex" ref={progressContainerRef} onClick={setProgress}>
           <div className="progress" ref={progressRef}></div>
+        </div>
         </div>
       </div>
       <audio ref={audioRef} src="music/Angels, Gurus and Advertising.mp3" id="audio" onTimeUpdate={updateProgress}></audio>
