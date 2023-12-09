@@ -4,16 +4,19 @@ import Image from 'next/image'
 import { useEffect } from 'react';
 import { gsap } from 'gsap';
 import MediaPlayer from '@/components/MediaPlayer';
+import BackgroundAnimation from '@/components/BackgroundAnimation';
 
 
 export default function Home() {
 
   useEffect(() => {
-    gsap.to(".box", { 
-      rotate: 360,
-      y: 50,
-      duration: 2,
-    });
+    gsap.to(".box", 
+      { 
+        rotate: 360,
+        y: 50,
+        duration: 2,
+      }
+    );
 
     gsap.fromTo(".page-title h1", 
       { opacity: 0 }, 
@@ -55,6 +58,9 @@ export default function Home() {
       </div>
       <div className="flex items-center justify-center box mb-10 h-80 w-80 bg-cyan-300 rounded-lg">
         <MediaPlayer />
+      </div>
+      <div>
+        <BackgroundAnimation />
       </div>
       <div className="sample-info mt-20 px-6">
         <h3>Samples Used: </h3>
