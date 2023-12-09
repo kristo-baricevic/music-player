@@ -35,14 +35,12 @@ const MusicPlayer: React.FC<MediaPlayerProps> = () => {
   const playSong = () => {
     setIsPlaying(true);
     if (musicContainerRef.current) musicContainerRef.current.classList.add('play');
-    if (playBtnRef.current) playBtnRef.current.querySelector('i.fas')?.classList.replace('fa-play', 'fa-pause');
     if (audioRef.current) audioRef.current.play();
   };
 
   const pauseSong = () => {
     setIsPlaying(false);
     if (musicContainerRef.current) musicContainerRef.current.classList.remove('play');
-    if (playBtnRef.current) playBtnRef.current.querySelector('i.fas')?.classList.replace('fa-pause', 'fa-play');
     if (audioRef.current) audioRef.current.pause();
   };
 
