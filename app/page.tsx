@@ -11,14 +11,26 @@ export default function Home() {
   useEffect(() => {
     gsap.to(".box", { 
       rotate: 360,
-      y: 150,
+      y: 50,
       duration: 2,
     });
 
     gsap.fromTo(".page-title h1", 
       { opacity: 0 }, 
-      { opacity: 1, duration: 2, delay: 1 }
+      { opacity: 1, duration: 2, delay: 1, scale: 1.5 }
     );
+
+    gsap.fromTo(".sample-info h3", 
+      { opacity: 0 }, 
+      { opacity: 1, duration: 2, delay: 2 }
+    );
+
+    gsap.fromTo(".sample-info p", 
+    { opacity: 0 }, 
+    { opacity: 1, duration: 2.5, delay: 2.15 }
+  );
+
+
   }, []);
 
 
@@ -29,6 +41,14 @@ export default function Home() {
       </div>  
       <div className="flex items-center justify-center box mb-10 h-80 w-80 bg-cyan-300 rounded-lg">
         <MediaPlayer />
+      </div>
+      <div className="sample-info mt-20">
+        <h3>Samples Used: </h3>
+        <p><a href="https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic">"Loser's Lament" by <span className="text-sky-400">Davie Allen & the Arrows</span></a></p>
+        <p>String Gourd Instrument from Allan Lomax's Songs of Thailand</p>
+        <p>Alan Watts' "Limitations of Language"</p>
+        <p>Various Clips from TV Advertisements</p>
+        <p>All instruments and production by <a href="http://kristo-portfolio.vercel.app"><span className="text-sky-400">Kr1st0</span></a></p>
       </div>
     </main>
   )
