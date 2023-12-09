@@ -91,18 +91,19 @@ const MusicPlayer: React.FC<MediaPlayerProps> = () => {
         </div>
       </div>
       <audio ref={audioRef} src="music/Angels, Gurus and Advertising.mp3" id="audio" onTimeUpdate={updateProgress}></audio>
-      <div className="navigation">
-        <button ref={prevBtnRef} className="action-btn" onClick={prevSong}>
-            <FontAwesomeIcon icon={faBackward} />
-        </button>
-        <button ref={playBtnRef} className="action-btn action-btn-big" onClick={isPlaying ? pauseSong : playSong}>
-            <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
-        </button>
-        <button ref={nextBtnRef} className="action-btn" onClick={nextSong}>
-            <FontAwesomeIcon icon={faForward} />
-        </button>
-      </div>
+        <div className="navigation">
+            <button ref={prevBtnRef} className="action-btn" onClick={prevSong}>
+                <FontAwesomeIcon icon={faBackward} />
+            </button>
+            <button ref={playBtnRef} className="action-btn action-btn-big" onClick={isPlaying ? pauseSong : playSong}>
+                <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
+            </button>
+            <button ref={nextBtnRef} className="action-btn" onClick={nextSong}>
+                <FontAwesomeIcon icon={faForward} />
+            </button>
+        </div>
     </div>
+  
   );
 };
 

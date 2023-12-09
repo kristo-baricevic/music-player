@@ -21,7 +21,7 @@ export default function Home() {
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
       <p>sup</p>
       </div>
-      <div className="box mb-10 h-80 w-80 bg-cyan-300 rounded-lg">
+      <div className="flex items-center justify-center box mb-10 h-80 w-80 bg-cyan-300 rounded-lg">
         <MediaPlayer />
       </div>
     </main>
