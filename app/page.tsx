@@ -58,9 +58,9 @@ export default function Home() {
       </div>
       <div className="sample-info mt-20 px-6">
         <h3>Samples Used: </h3>
-        <p><a href="https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic">&#39;Loser&#34;s Lament&#39; by <span className="text-sky-400">Davie Allen & the Arrows</span></a></p>
-        <p>String Gourd Instrument from Allan Lomax&#34;s Songs of Thailand</p>
-        <p>Alan Watts&#34; &#39;Limitations of Language&#39;</p>
+        <p><a href="https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic">&#34;Loser&#39;s Lament&#34; by <span className="text-sky-400">Davie Allen & the Arrows</span></a></p>
+        <p>String Gourd Instrument from Allan Lomax&#39;s Songs of Thailand</p>
+        <p>Alan Watts&#39; &#34;Limitations of Language&#34;</p>
         <p>Various Clips from TV Advertisements</p>
         <p>All instruments and production by <a href="http://kristo-portfolio.vercel.app"><span className="text-sky-400">Kr1st0</span></a></p>
       </div>
