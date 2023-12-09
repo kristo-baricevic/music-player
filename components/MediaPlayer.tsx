@@ -74,6 +74,7 @@ const MusicPlayer: React.FC<MediaPlayerProps> = () => {
     if (nextBtnRef.current) nextBtnRef.current.addEventListener('click', nextSong);
 
     return () => {
+
       // Cleanup event listeners when component unmounts
       if (prevBtnRef.current) prevBtnRef.current.removeEventListener('click', prevSong);
       if (nextBtnRef.current) nextBtnRef.current.removeEventListener('click', nextSong);
@@ -83,15 +84,16 @@ const MusicPlayer: React.FC<MediaPlayerProps> = () => {
   return (
     <div ref={musicContainerRef} className="music-container" id="music-container">
       <div className="music-info">
-        <img className="cover-image" src="images/cover.png" />
-        <div className="flex flex-col px-2">
-        <h4 className="flex" ref={titleRef}>Angels, Gurus and Advertising</h4>
-        <div className="progress-container flex" ref={progressContainerRef} onClick={setProgress}>
-          <div className="progress" ref={progressRef}></div>
-        </div>
-        </div>
+            <img className="cover-image" src="images/cover.png" />
+            <div className="flex flex-col px-2">
+                <h4 className="flex" ref={titleRef}>Angels, Gurus and Advertising</h4>
+                <div className="progress-container flex" ref={progressContainerRef} onClick={setProgress}>
+                    <div className="progress" ref={progressRef}></div>
+                </div>
+            </div>
       </div>
       <audio ref={audioRef} src="music/Angels, Gurus and Advertising.mp3" id="audio" onTimeUpdate={updateProgress}></audio>
+      <div className="container-background">
         <div className="navigation">
             <button ref={prevBtnRef} className="action-btn" onClick={prevSong}>
                 <FontAwesomeIcon icon={faBackward} />
@@ -102,6 +104,7 @@ const MusicPlayer: React.FC<MediaPlayerProps> = () => {
             <button ref={nextBtnRef} className="action-btn" onClick={nextSong}>
                 <FontAwesomeIcon icon={faForward} />
             </button>
+        </div>
         </div>
     </div>
   

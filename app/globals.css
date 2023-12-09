@@ -4,20 +4,67 @@
 @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
 
 :root {
-  --foreground-rgb: 255, 255, 255; 
+  --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 0, 0; 
   --background-end-rgb: 0, 0, 0; 
 }
 
 .music-container {
-  background-color: #414141;
-  box-shadow: inset -1px -1px 5px rgba(33,33,33, 0.5), inset 1px 1px 5px rgba(33,33,33,0.5); 
   display: flex;
   flex-direction: row;
   padding: 20px 30px;
   position: relative;
   margin: 10px 0;
-  z-index: 10;
+}
+
+.container-background {
+  display: flex;
+  background-color: #414141;
+  box-shadow: inset -1px -1px 5px rgba(33,33,33, 0.5), inset 1px 1px 5px rgba(33,33,33,0.5); 
+  z-index: 11;
+  padding: 20px 30px;
+}
+
+.music-info {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.8); 
+  border-radius: 15px 15px 0 0;
+  position: absolute;
+  padding: 4px;
+  top: 0;
+  left: 30px;
+  width: calc(100% - 60px);
+  opacity: 0;
+  transform: translateY(0%);
+  transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+  z-index: 0;
+}
+
+
+.cover-image {
+  display: flex;
+  border-radius: 50%;
+  object-fit: cover;
+  width: 30%; 
+  animation: rotate 5s linear infinite;
+  animation-play-state: paused;
+}
+
+.progress-container {
+  background: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px 0;
+  height: 4px;
+  width: 100%;
+}
+
+.progress {
+  background-color: #fe8daa;
+  border-radius: 5px;
+  height: 100%;
+  width: 0%;
+  transition: width 0.1s linear;
 }
 
 .img-container {
@@ -48,14 +95,6 @@
   animation-play-state: paused;
 }
 
-.cover-image {
-  display: flex;
-  border-radius: 50%;
-  object-fit: cover;
-  width: 30%; 
-  animation: rotate 5s linear infinite;
-  animation-play-state: paused;
-}
 
 .music-container.play .cover-image {
   animation-play-state: running;
@@ -107,19 +146,7 @@
   background-color: #ff6b8b; 
 }
 
-.music-info {
-  display: flex;
-  background-color: rgba(255, 255, 255, 0.8); 
-  border-radius: 15px 15px 0 0;
-  position: absolute;
-  top: 0;
-  left: 20px;
-  width: calc(100% - 40px);
-  opacity: 0;
-  transform: translateY(0%);
-  transition: transform 0.3s ease-in, opacity 0.3s ease-in;
-  z-index: 0;
-}
+
 
 .music-container.play .music-info {
   opacity: 1;
@@ -131,22 +158,9 @@
   color: black;
 }
 
-.progress-container {
-  background: #fff;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 10px 0;
-  height: 4px;
-  width: 100%;
-}
 
-.progress {
-  background-color: #fe8daa;
-  border-radius: 5px;
-  height: 100%;
-  width: 0%;
-  transition: width 0.1s linear;
-}
+
+
 
 /* @media (prefers-color-scheme: dark) {
   :root {
