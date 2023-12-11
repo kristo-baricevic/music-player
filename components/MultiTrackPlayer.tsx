@@ -1,88 +1,91 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
+import { AudioContext } from './AudioContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlay, faPause, faForward, faBackward } from '@fortawesome/free-solid-svg-icons';
 
-type MultiTrackPlayerProps = {};
+const MultiTrackPlayer = () => {
+  const audio = useContext(AudioContext);
 
-const MultiTrackPlayer: React.FC<MultiTrackPlayerProps> = () => {
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [buffers, setBuffers] = useState<AudioBuffer[]>([]);
-  const [gainNodes, setGainNodes] = useState<GainNode[]>([]);
-  const [isMuted, setIsMuted] = useState<boolean[]>([false, false, false]);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const trackSources = useRef<AudioBufferSourceNode[]>([]);
-  const startTime = useRef<number>(0);
-  const pauseTime = useRef<number>(0);
+  const musicContainerRef = useRef<HTMLDivElement>(null);
+  const playBtnRef = useRef<HTMLButtonElement>(null);
+  const prevBtnRef = useRef<HTMLButtonElement>(null);
+  const nextBtnRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    const ac = new AudioContext({ latencyHint: 'playback' });
-    setAudioContext(ac);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const progressContainerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const coverRef = useRef<HTMLImageElement>(null);
 
-    const loadBuffer = async (url: string) => {
-      const response = await fetch(url);
-      const arrayBuffer = await response.arrayBuffer();
-      return ac.decodeAudioData(arrayBuffer);
-    };
+  if (!audio) {
+    return null;
+  }
 
-    Promise.all([
-      loadBuffer('/music/track1.mp3'),
-      loadBuffer('/music/track2.mp3'),
-      loadBuffer('/music/track3.mp3')
-    ]).then(setBuffers);
+  const { isMuted, isPlaying, playPauseTracks, toggleMuteTrack } = audio;
 
-    // Initialize gain nodes
-    const gains = Array.from({ length: 3 }, () => ac.createGain());
-    setGainNodes(gains);
-  }, []);
+  const updateProgress = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
+    const { duration, currentTime } = e.currentTarget;
+    const progressPercent = (currentTime / duration) * 100;
+    if (progressRef.current) progressRef.current.style.width = `${progressPercent}%`;
+  };
 
-  const playPauseTracks = () => {
-    if (!audioContext || buffers.length < 3) return;
+  const setProgress = (e: React.MouseEvent<HTMLDivElement>) => {
+    const width = progressContainerRef.current?.clientWidth || 0;
+    const clickX = e.nativeEvent.offsetX;
+    const duration = audioRef.current?.duration || 0;
+    if (audioRef.current) audioRef.current.currentTime = (clickX / width) * duration;
+  };
+
+  const prevSong = () => {
+ 
+  };
+
+  const nextSong = () => {
   
-    if (isPlaying) {
-      // Pause the tracks
-      pauseTime.current = audioContext.currentTime - startTime.current;
-      trackSources.current.forEach(source => source.disconnect());
-      setIsPlaying(false);
-    } else {
-      // Create new source nodes and connect them
-      trackSources.current = buffers.map((buffer, index) => {
-        const source = audioContext.createBufferSource();
-        source.buffer = buffer;
-        source.connect(gainNodes[index]).connect(audioContext.destination);
-        return source;
-      });
-  
-      // Schedule start time slightly in the future to ensure synchronization
-      const scheduleTime = audioContext.currentTime + 0.4; // 100 ms in the future
-      trackSources.current.forEach(source => {
-        source.start(scheduleTime, pauseTime.current || 0);
-      });
-  
-      startTime.current = scheduleTime;
-      pauseTime.current = 0;
-      setIsPlaying(true);
-    }
-  };  
-
-  const toggleMuteTrack = (trackIndex: number) => {
-    const currentMuteState = isMuted[trackIndex];
-    gainNodes[trackIndex].gain.value = currentMuteState ? 1 : 0;
-    setIsMuted(isMuted.map((mute, index) => index === trackIndex ? !mute : mute));
   };
 
   return (
-    <div className="flex flex-row z-20 mt-6">
-      <button className="playButton flex bg-cyan-600 p-2 hover:bg-cyan-700 ml-2 rounded-full" onClick={playPauseTracks}>
-        {isPlaying ? 'Pause' : 'Play'}
-      </button>
-      <button className="playButton flex bg-cyan-600 p-2 hover:bg-cyan-700 ml-2 rounded-full" onClick={() => toggleMuteTrack(0)}>
-        {isMuted[0] ? 'Unmute' : 'Mute'} Track 1
-        </button>
-      <button className="playButton flex bg-cyan-600 p-2 hover:bg-cyan-700 ml-2 rounded-full" onClick={() => toggleMuteTrack(1)}>
-        {isMuted[1] ? 'Unmute' : 'Mute'} Track 2
-        </button>
-      <button className="playButton flex bg-cyan-600 hover:bg-cyan-700 p-2 ml-2 rounded-full" onClick={() => toggleMuteTrack(2)}>
-        {isMuted[2] ? 'Unmute' : 'Mute'} Track 3
-        </button>
+    <>
+      <div ref={musicContainerRef} className="music-container" id="music-container">
+      <div className="music-info">
+            <img className="cover-image" src="images/cover.png" />
+            <div className="flex flex-col px-2">
+                <h4 className="flex" ref={titleRef}>Angels, Gurus and Advertising</h4>
+                <div className="progress-container flex" ref={progressContainerRef} onClick={setProgress}>
+                    <div className="progress" ref={progressRef}></div>
+                </div>
+            </div>
+      </div>
+      <audio ref={audioRef} src="music/Angels, Gurus and Advertising.mp3" id="audio" onTimeUpdate={updateProgress}></audio>
+      <div className="container-background">
+        <div className="navigation">
+            <button ref={prevBtnRef} className="action-btn" onClick={prevSong}>
+                <FontAwesomeIcon icon={faBackward} />
+            </button>
+            <button ref={playBtnRef} className="action-btn action-btn-big" onClick={playPauseTracks}>
+                <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
+            </button>
+            <button ref={nextBtnRef} className="action-btn" onClick={nextSong}>
+                <FontAwesomeIcon icon={faForward} />
+            </button>
+        </div>
     </div>
+    </div>
+    <div className="flex flex-row z-20 mt-6">
+      {/* <button className="playButton flex bg-cyan-600 p-2 hover:bg-cyan-700 ml-2 rounded-full" onClick={playPauseTracks}>
+        {isPlaying ? 'Pause' : 'Play'}
+      </button> */}
+      {[0, 1, 2].map(trackIndex => (
+        <button 
+          key={trackIndex}
+          className="playButton flex bg-cyan-600 p-2 hover:bg-cyan-700 ml-2 rounded-full" 
+          onClick={() => toggleMuteTrack(trackIndex)}
+        >
+          {isMuted[trackIndex] ? 'Unmute' : 'Mute'} Track {trackIndex + 1}
+        </button>
+      ))}
+    </div>
+    </>
   );
 };
 
