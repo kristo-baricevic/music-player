@@ -58,9 +58,8 @@ export default function Home() {
         <h1 className="title-words text-4xl font-bold opacity-0">kr1st0-beats</h1>
       </div>
       <div className="flex items-center justify-center box mb-10 h-80 w-80 bg-cyan-300 rounded-lg">
-        <MediaPlayer />
+        <MultiTrackPlayer />
       </div>
-      <MultiTrackPlayer />
       <div>
         {/* <BackgroundAnimation /> */}
       </div>

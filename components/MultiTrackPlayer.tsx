@@ -1,7 +1,7 @@
 import React, { useContext, useRef } from 'react';
 import { AudioContext } from './AudioContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faPause, faForward, faBackward } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone } from '@fortawesome/free-solid-svg-icons';
 
 const MultiTrackPlayer = () => {
   const audio = useContext(AudioContext);
@@ -44,47 +44,70 @@ const MultiTrackPlayer = () => {
   
   };
 
+  const handleClickPlayPause = () => {
+    playPauseTracks();
+    if (musicContainerRef.current && isPlaying) {
+      musicContainerRef.current?.classList.remove('play');
+    } else {
+      musicContainerRef.current?.classList.add('play');
+    }
+  }
+
   return (
     <>
       <div ref={musicContainerRef} className="music-container" id="music-container">
-      <div className="music-info">
-            <img className="cover-image" src="images/cover.png" />
-            <div className="flex flex-col px-2">
-                <h4 className="flex" ref={titleRef}>Angels, Gurus and Advertising</h4>
-                <div className="progress-container flex" ref={progressContainerRef} onClick={setProgress}>
-                    <div className="progress" ref={progressRef}></div>
-                </div>
-            </div>
-      </div>
-      <audio ref={audioRef} src="music/Angels, Gurus and Advertising.mp3" id="audio" onTimeUpdate={updateProgress}></audio>
-      <div className="container-background">
-        <div className="navigation">
-            <button ref={prevBtnRef} className="action-btn" onClick={prevSong}>
-                <FontAwesomeIcon icon={faBackward} />
-            </button>
-            <button ref={playBtnRef} className="action-btn action-btn-big" onClick={playPauseTracks}>
-                <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
-            </button>
-            <button ref={nextBtnRef} className="action-btn" onClick={nextSong}>
-                <FontAwesomeIcon icon={faForward} />
-            </button>
+        <div className="music-info">
+              <img className="cover-image" src="images/cover.png" />
+              <div className="flex flex-col px-2">
+                  <h4 className="flex" ref={titleRef}>Angels, Gurus and Advertising</h4>
+                  <div className="progress-container flex" ref={progressContainerRef} onClick={setProgress}>
+                      <div className="progress" ref={progressRef}></div>
+                  </div>
+              </div>
         </div>
-    </div>
-    </div>
-    <div className="flex flex-row z-20 mt-6">
-      {/* <button className="playButton flex bg-cyan-600 p-2 hover:bg-cyan-700 ml-2 rounded-full" onClick={playPauseTracks}>
-        {isPlaying ? 'Pause' : 'Play'}
-      </button> */}
-      {[0, 1, 2].map(trackIndex => (
-        <button 
-          key={trackIndex}
-          className="playButton flex bg-cyan-600 p-2 hover:bg-cyan-700 ml-2 rounded-full" 
-          onClick={() => toggleMuteTrack(trackIndex)}
-        >
-          {isMuted[trackIndex] ? 'Unmute' : 'Mute'} Track {trackIndex + 1}
-        </button>
-      ))}
-    </div>
+        <div className="container-background">
+          <div className="navigation">
+              <button ref={prevBtnRef} className="action-btn" onClick={prevSong}>
+                  <FontAwesomeIcon icon={faBackward} />
+              </button>
+              <button ref={playBtnRef} className="action-btn action-btn-big" onClick={handleClickPlayPause}>
+                  <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
+              </button>
+              <button ref={nextBtnRef} className="action-btn" onClick={nextSong}>
+                  <FontAwesomeIcon icon={faForward} />
+              </button>
+          </div>
+        </div>
+      <div className="flex flex-row items-center justify-center z-20 mt-6">
+        {[0, 1, 2].map(trackIndex => (
+          <button 
+            key={trackIndex}
+            className="playButton flex bg-cyan-600 p-2 hover:bg-cyan-700 ml-2 rounded-full" 
+            onClick={() => toggleMuteTrack(trackIndex)}
+          >
+            {
+              trackIndex === 0 ? (
+              isMuted[trackIndex] ? 
+                  <FontAwesomeIcon icon={faGuitar} />
+                  : 
+                  <FontAwesomeIcon icon={faGuitar} />
+              ) : trackIndex === 1 ? ( 
+                isMuted[trackIndex] ? 
+                <FontAwesomeIcon icon={faMicrophone} />
+                : 
+                <FontAwesomeIcon icon={faMicrophone} />
+               ) : (
+                isMuted[trackIndex] ? 
+                  <FontAwesomeIcon icon={faDrum} />
+                  : 
+                  <FontAwesomeIcon icon={faDrum} />
+                )
+              }
+          </button>
+        ))}
+      </div>
+      </div>
+
     </>
   );
 };

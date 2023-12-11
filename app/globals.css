@@ -11,7 +11,7 @@
 
 .music-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   padding: 20px 30px;
   position: relative;
   margin: 10px 0;
