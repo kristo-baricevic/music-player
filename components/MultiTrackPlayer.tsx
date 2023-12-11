@@ -13,7 +13,7 @@ const MultiTrackPlayer: React.FC<MultiTrackPlayerProps> = () => {
   const pauseTime = useRef<number>(0);
 
   useEffect(() => {
-    const ac = new AudioContext();
+    const ac = new AudioContext({ latencyHint: 'playback' });
     setAudioContext(ac);
 
     const loadBuffer = async (url: string) => {
@@ -31,32 +31,6 @@ const MultiTrackPlayer: React.FC<MultiTrackPlayerProps> = () => {
     // Initialize gain nodes
     const gains = Array.from({ length: 3 }, () => ac.createGain());
     setGainNodes(gains);
-
-    const playPauseTracks = () => {
-      if (!audioContext) return;
-  
-      if (isPlaying) {
-        // Pause the tracks
-        pauseTime.current = audioContext.currentTime - startTime.current;
-        trackSources.current.forEach(source => source.disconnect());
-        setIsPlaying(false);
-      } else {
-        // Play the tracks
-        trackSources.current = buffers.map((buffer, index) => {
-          const source = audioContext.createBufferSource();
-          source.buffer = buffer;
-          source.connect(audioContext.destination);
-          return source;
-        });
-  
-        trackSources.current.forEach((source, index) => {
-          source.start(audioContext.currentTime, pauseTime.current);
-        });
-  
-        startTime.current = audioContext.currentTime - pauseTime.current;
-        setIsPlaying(true);
-      }
-    };
   }, []);
 
   const playPauseTracks = () => {
@@ -76,13 +50,14 @@ const MultiTrackPlayer: React.FC<MultiTrackPlayerProps> = () => {
         return source;
       });
   
-      const playTime = pauseTime.current || 0;
+      // Schedule start time slightly in the future to ensure synchronization
+      const scheduleTime = audioContext.currentTime + 0.4; // 100 ms in the future
       trackSources.current.forEach(source => {
-        // Start all tracks at the same reference time
-        source.start(audioContext.currentTime, playTime);
+        source.start(scheduleTime, pauseTime.current || 0);
       });
   
-      startTime.current = audioContext.currentTime - playTime;
+      startTime.current = scheduleTime;
+      pauseTime.current = 0;
       setIsPlaying(true);
     }
   };  
