@@ -60,7 +60,7 @@ const MultiTrackPlayer: React.FC<MultiTrackPlayerProps> = () => {
   }, []);
 
   const playPauseTracks = () => {
-    if (!audioContext) return;
+    if (!audioContext || buffers.length < 3) return;
   
     if (isPlaying) {
       // Pause the tracks
@@ -68,25 +68,24 @@ const MultiTrackPlayer: React.FC<MultiTrackPlayerProps> = () => {
       trackSources.current.forEach(source => source.disconnect());
       setIsPlaying(false);
     } else {
-      // Play the tracks
+      // Create new source nodes and connect them
       trackSources.current = buffers.map((buffer, index) => {
         const source = audioContext.createBufferSource();
         source.buffer = buffer;
-  
-        // Connect through the corresponding gain node
         source.connect(gainNodes[index]).connect(audioContext.destination);
-  
         return source;
       });
   
-      trackSources.current.forEach((source, index) => {
-        source.start(audioContext.currentTime, pauseTime.current);
+      const playTime = pauseTime.current || 0;
+      trackSources.current.forEach(source => {
+        // Start all tracks at the same reference time
+        source.start(audioContext.currentTime, playTime);
       });
   
-      startTime.current = audioContext.currentTime - pauseTime.current;
+      startTime.current = audioContext.currentTime - playTime;
       setIsPlaying(true);
     }
-  };
+  };  
 
   const toggleMuteTrack = (trackIndex: number) => {
     const currentMuteState = isMuted[trackIndex];
