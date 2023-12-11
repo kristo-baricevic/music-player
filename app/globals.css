@@ -158,7 +158,9 @@
   color: black;
 }
 
-
+.ball {
+  z-index: 0;
+}
 
 
 
