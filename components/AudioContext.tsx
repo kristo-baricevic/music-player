@@ -9,7 +9,6 @@ interface AudioContextState {
     isMuted: boolean[];
     buffers: AudioBuffer[];
     gainNodes: GainNode[];
-    trackDurations: number[];
     playPauseTracks: () => void;
     toggleMuteTrack: (trackIndex: number) => void;
 }
@@ -23,46 +22,31 @@ export const AudioContext = createContext<AudioContextState | undefined>(undefin
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [buffers, setBuffers] = useState<AudioBuffer[]>([]);
-  const [gainNodes, setGainNodes] = useState<GainNode[]>([]);
-  const [isMuted, setIsMuted] = useState<boolean[]>([false, false, false]);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [totalDuration, setTotalDuration] = useState(0);
-  const [trackDurations, setTrackDurations] = useState<number[]>([]);
-  const trackSources = useRef<AudioBufferSourceNode[]>([]);
-  const startTime = useRef<number>(0);
-  const pauseTime = useRef<number>(0);
-  
-
-  const loadBuffer = async (url: string) => {
-    try {
-      const response = await fetch(url);
-      const arrayBuffer = await response.arrayBuffer();
-      return await audioContext?.decodeAudioData(arrayBuffer);
-    } catch (error) {
-      console.error('Error loading buffer:', error);
-      return null;
-    }
-  };
-  
-
+    const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+    const [buffers, setBuffers] = useState<AudioBuffer[]>([]);
+    const [gainNodes, setGainNodes] = useState<GainNode[]>([]);
+    const [isMuted, setIsMuted] = useState<boolean[]>([false, false, false]);
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);
+    const trackSources = useRef<AudioBufferSourceNode[]>([]);
+    const startTime = useRef<number>(0);
+    const pauseTime = useRef<number>(0);
 
   useEffect(() => {
     const ac = new window.AudioContext({ latencyHint: 'playback' });
     setAudioContext(ac);
 
+    const loadBuffer = async (url: string) => {
+      const response = await fetch(url);
+      const arrayBuffer = await response.arrayBuffer();
+      return ac.decodeAudioData(arrayBuffer);
+    };
+
     Promise.all([
       loadBuffer('/music/track1.mp3'),
       loadBuffer('/music/track2.mp3'),
       loadBuffer('/music/track3.mp3')
-    ]).then(audioBuffers => {
-      const validBuffers = audioBuffers.filter((buffer): buffer is AudioBuffer => buffer !== null && buffer !== undefined);
-      setBuffers(validBuffers);
-      const durations = validBuffers.map(buffer => buffer.duration);
-      setTrackDurations(durations);
-    });
+    ]).then(setBuffers);
+
     // Initialize gain nodes
     const gains = Array.from({ length: 3 }, () => ac.createGain());
     setGainNodes(gains);
@@ -70,11 +54,6 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
 
   const playPauseTracks = () => {
     if (!audioContext || buffers.length < 3) return;
-
-    // setTrackDurations(trackIndex);
-    // const interval = setInterval(() => {
-    //   setCurrentTime(durations);
-    // }, 1000);
   
     if (isPlaying) {
       // Pause the tracks
@@ -88,7 +67,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
         source.buffer = buffer;
         source.connect(gainNodes[index]).connect(audioContext.destination);
         return source;
-      }); 
+      });
   
       // Schedule start time slightly in the future to ensure synchronization
       const scheduleTime = audioContext.currentTime + 0.1; // 100 ms in the future
@@ -109,7 +88,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   };
 
   return (
-    <AudioContext.Provider value={{ isPlaying, playPauseTracks, trackDurations, audioContext, isMuted, buffers, gainNodes, toggleMuteTrack }}>
+    <AudioContext.Provider value={{ isPlaying, playPauseTracks, audioContext, isMuted, buffers, gainNodes, toggleMuteTrack }}>
       {children}
     </AudioContext.Provider>
   );

@@ -21,7 +21,7 @@ const MultiTrackPlayer = () => {
     return null;
   }
 
-  const { isMuted, trackDurations, isPlaying, playPauseTracks, toggleMuteTrack } = audio;
+  const { isMuted, isPlaying, playPauseTracks, toggleMuteTrack } = audio;
 
   const updateProgress = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
     const { duration, currentTime } = e.currentTarget;
@@ -45,11 +45,13 @@ const MultiTrackPlayer = () => {
   };
 
   const handleClickPlayPause = () => {
-    playPauseTracks(); 
-    if (musicContainerRef.current) {
-      musicContainerRef.current.classList.toggle('play', isPlaying);
+    playPauseTracks();
+    if (musicContainerRef.current && isPlaying) {
+      musicContainerRef.current?.classList.remove('play');
+    } else {
+      musicContainerRef.current?.classList.add('play');
     }
-  };
+  }
 
   return (
     <>
