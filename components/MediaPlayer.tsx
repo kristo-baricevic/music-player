@@ -105,7 +105,7 @@ const MusicPlayer: React.FC<MediaPlayerProps> = () => {
                 <FontAwesomeIcon icon={faForward} />
             </button>
         </div>
-        </div>
+    </div>
     </div>
   
   );

@@ -4,16 +4,20 @@ import Image from 'next/image'
 import { useEffect } from 'react';
 import { gsap } from 'gsap';
 import MediaPlayer from '@/components/MediaPlayer';
+import BackgroundAnimation from '@/components/BackgroundAnimation';
+import MultiTrackPlayer from '@/components/MultiTrackPlayer';
 
 
 export default function Home() {
 
   useEffect(() => {
-    gsap.to(".box", { 
-      rotate: 360,
-      y: 50,
-      duration: 2,
-    });
+    gsap.to(".box", 
+      { 
+        rotate: 360,
+        y: 50,
+        duration: 2,
+      }
+    );
 
     gsap.fromTo(".page-title h1", 
       { opacity: 0 }, 
@@ -54,9 +58,12 @@ export default function Home() {
         <h1 className="title-words text-4xl font-bold opacity-0">kr1st0-beats</h1>
       </div>
       <div className="flex items-center justify-center box mb-10 h-80 w-80 bg-cyan-300 rounded-lg">
-        <MediaPlayer />
+        <MultiTrackPlayer />
       </div>
-      <div className="sample-info mt-20 px-6">
+      <div>
+        {/* <BackgroundAnimation /> */}
+      </div>
+      <div className="sample-info mt-10 px-6">
         <h3>Samples Used: </h3>
         <p><a href="https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic">&#34;Loser&#39;s Lament&#34; by <span className="text-sky-400">Davie Allen & the Arrows</span></a></p>
         <p>String Gourd Instrument from Allan Lomax&#39;s Songs of Thailand</p>
