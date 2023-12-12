@@ -1,7 +1,7 @@
 import React, { useContext, useRef } from 'react';
 import { AudioContext } from './AudioContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone, faCloudRain } from '@fortawesome/free-solid-svg-icons';
 
 const MultiTrackPlayer = () => {
   const audio = useContext(AudioContext);
@@ -21,7 +21,7 @@ const MultiTrackPlayer = () => {
     return null;
   }
 
-  const { isMuted, isPlaying, playPauseTracks, toggleMuteTrack } = audio;
+  const { isMuted, isLoading, isPlaying, playPauseTracks, toggleMuteTrack } = audio;
 
   const updateProgress = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
     const { duration, currentTime } = e.currentTarget;
@@ -72,7 +72,11 @@ const MultiTrackPlayer = () => {
                   <FontAwesomeIcon icon={faBackward} />
               </button>
               <button ref={playBtnRef} className="action-btn action-btn-big" onClick={handleClickPlayPause}>
+                { isLoading ? 
+                  <FontAwesomeIcon icon={faCloudRain} />
+                :
                   <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
+                }
               </button>
               <button ref={nextBtnRef} className="action-btn" onClick={nextSong}>
                   <FontAwesomeIcon icon={faForward} />
