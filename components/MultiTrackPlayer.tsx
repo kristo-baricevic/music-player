@@ -45,6 +45,7 @@ const MultiTrackPlayer = () => {
   };
 
   const handleClickPlayPause = () => {
+    console.log("click");
     playPauseTracks();
     if (musicContainerRef.current && isPlaying) {
       musicContainerRef.current?.classList.remove('play');
