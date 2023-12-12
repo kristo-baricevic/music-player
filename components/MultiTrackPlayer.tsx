@@ -82,7 +82,7 @@ const MultiTrackPlayer = () => {
         {[0, 1, 2].map(trackIndex => (
           <button 
             key={trackIndex}
-            className="playButton flex bg-cyan-600 p-2 hover:bg-cyan-700 ml-2 rounded-full" 
+            className="playButton flex mx-4 bg-cyan-700 p-2 hover:bg-cyan-600 active:bg-cyan-900 ml-2 rounded-full" 
             onClick={() => toggleMuteTrack(trackIndex)}
           >
             {
