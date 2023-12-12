@@ -6,6 +6,7 @@ import React, { createContext, useState, useEffect, useRef } from 'react';
 interface AudioContextState {
     audioContext: AudioContext | null;
     isPlaying: boolean;
+    isLoading: boolean;
     isMuted: boolean[];
     buffers: AudioBuffer[];
     gainNodes: GainNode[];
@@ -27,15 +28,18 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     const [gainNodes, setGainNodes] = useState<GainNode[]>([]);
     const [isMuted, setIsMuted] = useState<boolean[]>([false, false, false]);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
+    const [isLoading, setIsLoading] =useState<boolean>(false);
     const trackSources = useRef<AudioBufferSourceNode[]>([]);
     const startTime = useRef<number>(0);
     const pauseTime = useRef<number>(0);
 
-  useEffect(() => {
-    const ac = new window.AudioContext({ latencyHint: 'playback' });
-    setAudioContext(ac);
 
-    const loadBuffer = async (url: string) => {
+    
+  useEffect(() => {
+
+      const ac = new window.AudioContext({ latencyHint: 'playback' });
+      setAudioContext(ac);
+      const loadBuffer = async (url: string) => {
       const response = await fetch(url);
       const arrayBuffer = await response.arrayBuffer();
       return ac.decodeAudioData(arrayBuffer);
@@ -53,7 +57,9 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   }, []);
 
   const playPauseTracks = () => {
-    if (!audioContext || buffers.length < 3) return;
+    if (!audioContext || buffers.length < 3) {
+      setIsLoading(true);
+    } else
   
     if (isPlaying) {
       // Pause the tracks
@@ -68,7 +74,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
         source.connect(gainNodes[index]).connect(audioContext.destination);
         return source;
       });
-  
+
       // Schedule start time slightly in the future to ensure synchronization
       const scheduleTime = audioContext.currentTime + 0.1; // 100 ms in the future
       trackSources.current.forEach(source => {
@@ -78,6 +84,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       startTime.current = scheduleTime;
       pauseTime.current = 0;
       setIsPlaying(true);
+      setIsLoading(false);
     }
   }; 
 
@@ -88,7 +95,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   };
 
   return (
-    <AudioContext.Provider value={{ isPlaying, playPauseTracks, audioContext, isMuted, buffers, gainNodes, toggleMuteTrack }}>
+    <AudioContext.Provider value={{ isPlaying, isLoading, playPauseTracks, audioContext, isMuted, buffers, gainNodes, toggleMuteTrack }}>
       {children}
     </AudioContext.Provider>
   );

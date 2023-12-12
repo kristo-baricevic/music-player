@@ -1,7 +1,7 @@
 import React, { useContext, useRef } from 'react';
 import { AudioContext } from './AudioContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone, faCloudRain } from '@fortawesome/free-solid-svg-icons';
 
 const MultiTrackPlayer = () => {
   const audio = useContext(AudioContext);
@@ -21,7 +21,7 @@ const MultiTrackPlayer = () => {
     return null;
   }
 
-  const { isMuted, isPlaying, playPauseTracks, toggleMuteTrack } = audio;
+  const { isMuted, isLoading, isPlaying, playPauseTracks, toggleMuteTrack } = audio;
 
   const updateProgress = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
     const { duration, currentTime } = e.currentTarget;
@@ -45,6 +45,7 @@ const MultiTrackPlayer = () => {
   };
 
   const handleClickPlayPause = () => {
+    console.log("click");
     playPauseTracks();
     if (musicContainerRef.current && isPlaying) {
       musicContainerRef.current?.classList.remove('play');
@@ -71,7 +72,11 @@ const MultiTrackPlayer = () => {
                   <FontAwesomeIcon icon={faBackward} />
               </button>
               <button ref={playBtnRef} className="action-btn action-btn-big" onClick={handleClickPlayPause}>
+                { isLoading ? 
+                  <FontAwesomeIcon icon={faCloudRain} />
+                :
                   <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
+                }
               </button>
               <button ref={nextBtnRef} className="action-btn" onClick={nextSong}>
                   <FontAwesomeIcon icon={faForward} />
@@ -82,27 +87,27 @@ const MultiTrackPlayer = () => {
         {[0, 1, 2].map(trackIndex => (
           <button 
             key={trackIndex}
-            className="playButton flex mx-4 bg-cyan-700 p-2 hover:bg-cyan-600 active:bg-cyan-900 ml-2 rounded-full" 
+            className="playButton flex mx-4 bg-cyan-700 p-4 hover:bg-cyan-600 active:bg-cyan-900 ml-2 rounded-full" 
             onClick={() => toggleMuteTrack(trackIndex)}
           >
             {
               trackIndex === 0 ? (
-              isMuted[trackIndex] ? 
-                  <FontAwesomeIcon icon={faGuitar} />
+                isMuted[trackIndex] ? 
+                  <FontAwesomeIcon icon={faGuitar} size="2xl" fade/>
                   : 
-                  <FontAwesomeIcon icon={faGuitar} />
+                  <FontAwesomeIcon icon={faGuitar} size="2xl" />
               ) : trackIndex === 1 ? ( 
                 isMuted[trackIndex] ? 
-                <FontAwesomeIcon icon={faMicrophone} />
+                <FontAwesomeIcon icon={faMicrophone} size="2xl" fade/>
                 : 
-                <FontAwesomeIcon icon={faMicrophone} />
-               ) : (
+                <FontAwesomeIcon icon={faMicrophone} size="2xl" />
+              ) : (
                 isMuted[trackIndex] ? 
-                  <FontAwesomeIcon icon={faDrum} />
+                  <FontAwesomeIcon icon={faDrum} size="2xl" fade/>
                   : 
-                  <FontAwesomeIcon icon={faDrum} />
-                )
-              }
+                  <FontAwesomeIcon icon={faDrum} size="2xl"/>
+              )
+            }
           </button>
         ))}
       </div>
