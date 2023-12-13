@@ -1,10 +1,20 @@
-import React, { useContext, useRef } from 'react';
-import { AudioContext } from './AudioContext';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { AudioPlayerContext } from './AudioContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone, faCloudRain } from '@fortawesome/free-solid-svg-icons';
 
+declare global {
+  interface Window {
+    webkitAudioContext: typeof AudioContext;
+  }
+}
+
 const MultiTrackPlayer = () => {
-  const audio = useContext(AudioContext);
+  const audio = useContext(AudioPlayerContext);
+
+  useEffect(() => {
+    // setAudio(new (window.AudioContext || window.webkitAudioContext)());
+  }, []);
 
   const musicContainerRef = useRef<HTMLDivElement>(null);
   const playBtnRef = useRef<HTMLButtonElement>(null);
@@ -24,9 +34,14 @@ const MultiTrackPlayer = () => {
   const { isMuted, isLoading, isPlaying, playPauseTracks, toggleMuteTrack } = audio;
 
   const updateProgress = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
-    const { duration, currentTime } = e.currentTarget;
-    const progressPercent = (currentTime / duration) * 100;
-    if (progressRef.current) progressRef.current.style.width = `${progressPercent}%`;
+    // if (!audioContext || !trackSources.current.length) return;
+  
+
+
+    // const currentTime = audioContext.currentTime - startTime.current;
+
+    // const progressPercent = (currentTime / duration) * 100;
+    // if (progressRef.current) progressRef.current.style.width = `${progressPercent}%`;
   };
 
   const setProgress = (e: React.MouseEvent<HTMLDivElement>) => {
