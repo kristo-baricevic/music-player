@@ -6,9 +6,40 @@ import { gsap } from 'gsap';
 import MediaPlayer from '@/components/MediaPlayer';
 import BackgroundAnimation from '@/components/BackgroundAnimation';
 import MultiTrackPlayer from '@/components/MultiTrackPlayer';
+import { DrawSVGPlugin } from 'gsap/all';
+
 
 
 export default function Home() {
+
+  function createStarburst(numberOfLines: number, staggerTime: number) {
+    const container = document.getElementById('starburst');
+  
+    for (let i = 0; i < numberOfLines; i++) {
+      const line = document.createElement('div');
+      line.className = 'line';
+      line.style.transform = `rotate(${(360 / numberOfLines) * i}deg)`;
+      line.style.backgroundColor = getRandomColor(); 
+
+  
+      container?.appendChild(line);
+  
+      gsap.fromTo(line, 
+        { width: 0, opacity: 0 },
+        { duration: 2, width: '50%', opacity: .25, ease: 'power2.inOut', yoyo: true, repeat: -1, delay: i * staggerTime }
+      );
+    }
+  }
+
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+  
 
   useEffect(() => {
     gsap.to(".box", 
@@ -44,13 +75,18 @@ export default function Home() {
 
     gsap.to('.title-words', 
       { color: '#fe8daa', 
-      duration: 4, 
+      duration: 2, 
       repeat: -1, 
       yoyo: true, 
-      repeatDelay: .5
-    })
+      delay: 2,
+      repeatDelay: 2
+    });
+
+    createStarburst(100, .04);
   }, []);
 
+
+  
 
   return (
     <main className="flex flex-col min-h-screen items-center justify-center">
@@ -60,6 +96,7 @@ export default function Home() {
       <div className="flex items-center justify-center box mb-10 h-80 w-80 bg-cyan-300 rounded-lg">
         <MultiTrackPlayer />
       </div>
+      <div id="starburst" className="starburst"></div>
       <div>
         {/* <BackgroundAnimation /> */}
       </div>

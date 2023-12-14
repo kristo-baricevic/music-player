@@ -36,7 +36,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   useEffect(() => {
     
     const ac = new window.AudioContext({ latencyHint: 'playback' });
-    setAudioContext(ac);
+   
 
     const loadBuffer = async (url: string) => {
       setIsLoading(true);
@@ -44,6 +44,8 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       const arrayBuffer = await response.arrayBuffer();
       return ac.decodeAudioData(arrayBuffer);
     };
+
+    setAudioContext(ac);
 
     Promise.all([
       loadBuffer('/music/track1.mp3'),
@@ -53,7 +55,6 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       setBuffers(buffers);
       setIsLoading(false);
     });
-
 
     // Initialize gain nodes
     const gains = Array.from({ length: 3 }, () => ac.createGain());
@@ -75,7 +76,8 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       pauseTime.current = audioContext.currentTime - startTime.current;
       trackSources.current.forEach(source => source.disconnect());
       setIsPlaying(false);
-    } else {
+    } 
+    else {
       // Create new source nodes and connect them
       trackSources.current = buffers.map((buffer, index) => {
         const source = audioContext.createBufferSource();
