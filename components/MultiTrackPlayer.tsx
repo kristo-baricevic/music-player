@@ -109,17 +109,17 @@ const MultiTrackPlayer = () => {
               trackIndex === 0 ? (
                 isMuted[trackIndex] ? 
                   <FontAwesomeIcon icon={faGuitar} size="2xl" fade/>
-                  : 
+                : 
                   <FontAwesomeIcon icon={faGuitar} size="2xl" />
               ) : trackIndex === 1 ? ( 
                 isMuted[trackIndex] ? 
-                <FontAwesomeIcon icon={faMicrophone} size="2xl" fade/>
+                  <FontAwesomeIcon icon={faMicrophone} size="2xl" fade/>
                 : 
-                <FontAwesomeIcon icon={faMicrophone} size="2xl" />
+                  <FontAwesomeIcon icon={faMicrophone} size="2xl" />
               ) : (
                 isMuted[trackIndex] ? 
                   <FontAwesomeIcon icon={faDrum} size="2xl" fade/>
-                  : 
+                : 
                   <FontAwesomeIcon icon={faDrum} size="2xl"/>
               )
             }
