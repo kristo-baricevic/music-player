@@ -34,15 +34,44 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     const pauseTime = useRef<number>(0);
     
   useEffect(() => {
-    
-    const ac = new window.AudioContext({ latencyHint: 'playback' });
-   
 
+    let ac: AudioContext | null = null;
+    let usingWebAudio = true
+    
+    try {
+      if (typeof AudioContext !== 'undefined') {
+        ac = new window.AudioContext({ latencyHint: 'playback' });
+      } else if (typeof window.webkitAudioContext !== 'undefined') {
+        ac = new window.webkitAudioContext();
+      } else {
+            usingWebAudio = false;
+      }
+    } catch(e) {
+        usingWebAudio = false;
+        ac = null;
+    }
+
+    // context state at this time is `undefined` in iOS8 Safari
+    if (usingWebAudio && ac && ac.state === 'suspended') {
+    var resume = function () {
+      ac?.resume();
+
+      setTimeout(function () {
+        if (ac?.state === 'running') {
+          document.body.removeEventListener('touchend', resume, false);
+        }
+      }, 0);
+    };
+
+    document.body.addEventListener('touchend', resume, false);
+    }
+
+    if (ac) {
     const loadBuffer = async (url: string) => {
       setIsLoading(true);
       const response = await fetch(url);
       const arrayBuffer = await response.arrayBuffer();
-      return ac.decodeAudioData(arrayBuffer);
+      return ac!.decodeAudioData(arrayBuffer);
     };
 
     setAudioContext(ac);
@@ -57,8 +86,11 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     });
 
     // Initialize gain nodes
-    const gains = Array.from({ length: 3 }, () => ac.createGain());
+    const gains = Array.from({ length: 3 }, () => ac!.createGain());
     setGainNodes(gains);
+  }
+
+    return () => {};
   }, []);
 
   const playPauseTracks = async () => {

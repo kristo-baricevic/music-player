@@ -3,10 +3,8 @@
 import Image from 'next/image'
 import { useEffect } from 'react';
 import { gsap } from 'gsap';
-import MediaPlayer from '@/components/MediaPlayer';
 import BackgroundAnimation from '@/components/BackgroundAnimation';
 import MultiTrackPlayer from '@/components/MultiTrackPlayer';
-import { DrawSVGPlugin } from 'gsap/all';
 
 
 
