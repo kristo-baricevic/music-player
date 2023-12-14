@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AudioPlayerContext } from './AudioContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone, faCloudRain } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 declare global {
   interface Window {
@@ -88,7 +88,7 @@ const MultiTrackPlayer = () => {
               </button>
               <button ref={playBtnRef} className="action-btn action-btn-big" onClick={handleClickPlayPause}>
                 { isLoading ? 
-                  <FontAwesomeIcon icon={faCloudRain} />
+                  <FontAwesomeIcon icon={faSpinner} spin />
                 :
                   <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
                 }

@@ -35,9 +35,11 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     
   useEffect(() => {
     
-      const ac = new window.AudioContext({ latencyHint: 'playback' });
-      setAudioContext(ac);
-      const loadBuffer = async (url: string) => {
+    const ac = new window.AudioContext({ latencyHint: 'playback' });
+    setAudioContext(ac);
+
+    const loadBuffer = async (url: string) => {
+      setIsLoading(true);
       const response = await fetch(url);
       const arrayBuffer = await response.arrayBuffer();
       return ac.decodeAudioData(arrayBuffer);
@@ -49,8 +51,9 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       loadBuffer('/music/track3.mp3')
     ]).then(buffers => {
       setBuffers(buffers);
-      setIsLoading(true);
+      setIsLoading(false);
     });
+
 
     // Initialize gain nodes
     const gains = Array.from({ length: 3 }, () => ac.createGain());
