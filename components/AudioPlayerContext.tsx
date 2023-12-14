@@ -19,7 +19,7 @@ type AudioProviderProps = {
   };
 
 // Create the context
-export const AudioContext = createContext<AudioContextState | undefined>(undefined);
+export const AudioPlayerContext = createContext<AudioContextState | undefined>(undefined);
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     
@@ -32,14 +32,14 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     const trackSources = useRef<AudioBufferSourceNode[]>([]);
     const startTime = useRef<number>(0);
     const pauseTime = useRef<number>(0);
-
-
     
   useEffect(() => {
+    
+    const ac = new window.AudioContext({ latencyHint: 'playback' });
+    setAudioContext(ac);
 
-      const ac = new window.AudioContext({ latencyHint: 'playback' });
-      setAudioContext(ac);
-      const loadBuffer = async (url: string) => {
+    const loadBuffer = async (url: string) => {
+      setIsLoading(true);
       const response = await fetch(url);
       const arrayBuffer = await response.arrayBuffer();
       return ac.decodeAudioData(arrayBuffer);
@@ -49,17 +49,26 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       loadBuffer('/music/track1.mp3'),
       loadBuffer('/music/track2.mp3'),
       loadBuffer('/music/track3.mp3')
-    ]).then(setBuffers);
+    ]).then(buffers => {
+      setBuffers(buffers);
+      setIsLoading(false);
+    });
+
 
     // Initialize gain nodes
     const gains = Array.from({ length: 3 }, () => ac.createGain());
     setGainNodes(gains);
   }, []);
 
-  const playPauseTracks = () => {
+  const playPauseTracks = async () => {
     if (!audioContext || buffers.length < 3) {
       setIsLoading(true);
-    } else
+      return;
+    }
+  
+    if (audioContext.state === 'suspended') {
+      await audioContext.resume();
+    }
   
     if (isPlaying) {
       // Pause the tracks
@@ -95,9 +104,9 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   };
 
   return (
-    <AudioContext.Provider value={{ isPlaying, isLoading, playPauseTracks, audioContext, isMuted, buffers, gainNodes, toggleMuteTrack }}>
+    <AudioPlayerContext.Provider value={{ isPlaying, isLoading, playPauseTracks, audioContext, isMuted, buffers, gainNodes, toggleMuteTrack }}>
       {children}
-    </AudioContext.Provider>
+    </AudioPlayerContext.Provider>
   );
 };
 

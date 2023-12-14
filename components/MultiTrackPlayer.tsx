@@ -1,10 +1,20 @@
-import React, { useContext, useRef } from 'react';
-import { AudioContext } from './AudioContext';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { AudioPlayerContext } from './AudioPlayerContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone, faCloudRain } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone, faSpinner } from '@fortawesome/free-solid-svg-icons';
+
+declare global {
+  interface Window {
+    webkitAudioContext: typeof AudioContext;
+  }
+}
 
 const MultiTrackPlayer = () => {
-  const audio = useContext(AudioContext);
+  const audio = useContext(AudioPlayerContext);
+
+  useEffect(() => {
+    // setAudio(new (window.AudioContext || window.webkitAudioContext)());
+  }, []);
 
   const musicContainerRef = useRef<HTMLDivElement>(null);
   const playBtnRef = useRef<HTMLButtonElement>(null);
@@ -24,9 +34,14 @@ const MultiTrackPlayer = () => {
   const { isMuted, isLoading, isPlaying, playPauseTracks, toggleMuteTrack } = audio;
 
   const updateProgress = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
-    const { duration, currentTime } = e.currentTarget;
-    const progressPercent = (currentTime / duration) * 100;
-    if (progressRef.current) progressRef.current.style.width = `${progressPercent}%`;
+    // if (!audioContext || !trackSources.current.length) return;
+  
+
+
+    // const currentTime = audioContext.currentTime - startTime.current;
+
+    // const progressPercent = (currentTime / duration) * 100;
+    // if (progressRef.current) progressRef.current.style.width = `${progressPercent}%`;
   };
 
   const setProgress = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -73,7 +88,7 @@ const MultiTrackPlayer = () => {
               </button>
               <button ref={playBtnRef} className="action-btn action-btn-big" onClick={handleClickPlayPause}>
                 { isLoading ? 
-                  <FontAwesomeIcon icon={faCloudRain} />
+                  <FontAwesomeIcon icon={faSpinner} spin />
                 :
                   <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
                 }
@@ -94,17 +109,17 @@ const MultiTrackPlayer = () => {
               trackIndex === 0 ? (
                 isMuted[trackIndex] ? 
                   <FontAwesomeIcon icon={faGuitar} size="2xl" fade/>
-                  : 
+                : 
                   <FontAwesomeIcon icon={faGuitar} size="2xl" />
               ) : trackIndex === 1 ? ( 
                 isMuted[trackIndex] ? 
-                <FontAwesomeIcon icon={faMicrophone} size="2xl" fade/>
+                  <FontAwesomeIcon icon={faMicrophone} size="2xl" fade/>
                 : 
-                <FontAwesomeIcon icon={faMicrophone} size="2xl" />
+                  <FontAwesomeIcon icon={faMicrophone} size="2xl" />
               ) : (
                 isMuted[trackIndex] ? 
                   <FontAwesomeIcon icon={faDrum} size="2xl" fade/>
-                  : 
+                : 
                   <FontAwesomeIcon icon={faDrum} size="2xl"/>
               )
             }
