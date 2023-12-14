@@ -89,7 +89,7 @@ export default function Home() {
   return (
     <main className="flex flex-col min-h-screen items-center justify-center">
       <div className="page-title flex justify-center">
-        <h1 className="title-words text-4xl font-bold opacity-0">kr1st0-beats</h1>
+        <h1 className="title-words text-4xl mt-2 font-bold opacity-0">kr1st0-beats</h1>
       </div>
       <div className="flex items-center justify-center box mb-10 h-80 w-80 bg-cyan-300 rounded-lg">
         <MultiTrackPlayer />

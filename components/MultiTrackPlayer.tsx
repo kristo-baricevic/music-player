@@ -73,13 +73,13 @@ const MultiTrackPlayer = () => {
     <>
       <div ref={musicContainerRef} className="music-container" id="music-container">
         <div className="music-info">
-              <img className="cover-image" src="images/cover.png" />
-              <div className="flex flex-col px-2">
-                  <h4 className="flex" ref={titleRef}>Angels, Gurus and Advertising</h4>
-                  <div className="progress-container flex" ref={progressContainerRef} onClick={setProgress}>
-                      <div className="progress" ref={progressRef}></div>
-                  </div>
+          <img className="cover-image" src="images/cover.png" />
+          <div className="flex flex-col px-2">
+              <h4 className="flex" ref={titleRef}>Angels, Gurus and Advertising</h4>
+              <div className="progress-container flex" ref={progressContainerRef} onClick={setProgress}>
+                  <div className="progress" ref={progressRef}></div>
               </div>
+          </div>
         </div>
         <div className="container-background">
           <div className="navigation">
