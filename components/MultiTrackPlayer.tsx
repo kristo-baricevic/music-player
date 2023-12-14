@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { AudioPlayerContext } from './AudioContext';
+import { AudioPlayerContext } from './AudioPlayerContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
