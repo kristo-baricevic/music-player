@@ -82,14 +82,14 @@ export default function Home() {
       }
     );
 
-    gsap.fromTo(".page-title h1", 
-      { opacity: 0 }, 
-      { opacity: 1, 
-        duration: 2, 
-        delay: 1, 
-        scale: 1.5 
-      }
-    );
+    // gsap.fromTo(".page-title h1", 
+    //   { opacity: 0 }, 
+    //   { opacity: 1, 
+    //     duration: 2, 
+    //     delay: 1, 
+    //     scale: 1.5 
+    //   }
+    // );
 
     gsap.fromTo(".sample-info h3", 
       { opacity: 0 }, 
@@ -105,13 +105,14 @@ export default function Home() {
         delay: 2.15 }
     );
 
-    gsap.to('.title-words', 
+    gsap.to('.letter', 
       { color: '#fe8daa', 
-      duration: 2, 
+      duration: 1.5, 
       repeat: -1, 
       yoyo: true, 
-      delay: 2,
-      repeatDelay: 2
+      delay: 1,
+      stagger: .5,
+      repeatDelay: .5
     });
 
     createStarburst(100, .04);
@@ -122,7 +123,9 @@ export default function Home() {
     <main className="flex flex-col min-h-screen items-center justify-center">
       <div className="night-sky" id="night-sky"></div>
       <div className="page-title flex justify-center">
-        <h1 className="title-words text-4xl mt-2 font-bold opacity-0">kr1st0-beats</h1>
+        { 'kr1st0-beats'.split('').map((letter, index) => (
+          <span key={index} className="letter text-2xl" id="letter">{letter}</span>
+        ))}      
       </div>
       <div className="flex items-center justify-center box mb-10 h-80 w-80 bg-cyan-300 rounded-lg">
         <MultiTrackPlayer />

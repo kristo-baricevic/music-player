@@ -35,8 +35,6 @@ const MultiTrackPlayer = () => {
 
   const updateProgress = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
     // if (!audioContext || !trackSources.current.length) return;
-  
-
 
     // const currentTime = audioContext.currentTime - startTime.current;
 
