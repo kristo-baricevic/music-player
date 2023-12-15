@@ -157,8 +157,6 @@
   background-color: #ff6b8b; 
 }
 
-
-
 .music-container.play .music-info {
   opacity: 1;
   transform: translateY(-100%);
@@ -173,7 +171,20 @@
   z-index: 0;
 }
 
+.night-sky {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  background-color: #000;
+  z-index:-2;
+}
 
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgb(255, 228, 94);
+  opacity: 0; 
+}
 
 /* @media (prefers-color-scheme: dark) {
   :root {

@@ -39,6 +39,40 @@ export default function Home() {
   }
   
 
+  function createSky() {
+    const nightSky = document.getElementById('night-sky');
+    const numberOfStars = 300; 
+
+    for (let i = 0; i < numberOfStars; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+
+
+      // Random size from 1px to 3px
+      const starSize = Math.random() * 2 + 1;
+      star.style.width = `${starSize}px`;
+      star.style.height = `${starSize}px`;
+
+      // Random position within the container
+      if (nightSky) {
+        const posX = Math.random() * nightSky.offsetWidth;
+        const posY = Math.random() * nightSky.offsetHeight;
+        star.style.left = `${posX}px`;
+        star.style.top = `${posY}px`;
+
+        nightSky.appendChild(star);
+      }
+
+      //animation
+      gsap.to(star, {
+        opacity: Math.random(),
+        duration: Math.random() * 2 + 1, 
+        repeat: -1,
+        yoyo: true, 
+        ease: 'power1.inOut'
+      });
+  }};
+
   useEffect(() => {
     gsap.to(".box", 
       { 
@@ -81,13 +115,12 @@ export default function Home() {
     });
 
     createStarburst(100, .04);
+    createSky();
   }, []);
-
-
-  
 
   return (
     <main className="flex flex-col min-h-screen items-center justify-center">
+      <div className="night-sky" id="night-sky"></div>
       <div className="page-title flex justify-center">
         <h1 className="title-words text-4xl mt-2 font-bold opacity-0">kr1st0-beats</h1>
       </div>
