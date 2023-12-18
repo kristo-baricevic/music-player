@@ -1,12 +1,12 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { gsap } from 'gsap';
 import BackgroundAnimation from '@/components/BackgroundAnimation';
 import MultiTrackPlayer from '@/components/MultiTrackPlayer';
-
-
+import LinerNotes from '@/components/LinerNotes';
+import { AudioPlayerContext } from '@/components/AudioPlayerContext';
 
 export default function Home() {
 
@@ -18,7 +18,6 @@ export default function Home() {
       line.className = 'line';
       line.style.transform = `rotate(${(360 / numberOfLines) * i}deg)`;
       line.style.backgroundColor = getRandomColor(); 
-
   
       container?.appendChild(line);
   
@@ -37,7 +36,6 @@ export default function Home() {
     }
     return color;
   }
-  
 
   function createSky() {
     const nightSky = document.getElementById('night-sky');
@@ -46,7 +44,6 @@ export default function Home() {
     for (let i = 0; i < numberOfStars; i++) {
       const star = document.createElement('div');
       star.className = 'star';
-
 
       // Random size from 1px to 3px
       const starSize = Math.random() * 2 + 1;
@@ -82,15 +79,6 @@ export default function Home() {
       }
     );
 
-    // gsap.fromTo(".page-title h1", 
-    //   { opacity: 0 }, 
-    //   { opacity: 1, 
-    //     duration: 2, 
-    //     delay: 1, 
-    //     scale: 1.5 
-    //   }
-    // );
-
     gsap.fromTo(".sample-info h3", 
       { opacity: 0 }, 
       { opacity: 1, 
@@ -119,6 +107,14 @@ export default function Home() {
     createSky();
   }, []);
 
+  const audio = useContext(AudioPlayerContext);
+
+  if (!audio) {
+    return null;
+  }
+  
+  const { currentSongIndex } = audio;
+
   return (
     <main className="flex flex-col min-h-screen items-center justify-center">
       <div className="night-sky" id="night-sky"></div>
@@ -134,14 +130,7 @@ export default function Home() {
       <div>
         {/* <BackgroundAnimation /> */}
       </div>
-      <div className="sample-info mt-10 px-6">
-        <h3>Samples Used: </h3>
-        <p><a href="https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic">&#34;Loser&#39;s Lament&#34; by <span className="text-sky-400">Davie Allen & the Arrows</span></a></p>
-        <p>String Gourd Instrument from Allan Lomax&#39;s Songs of Thailand</p>
-        <p>Alan Watts&#39; &#34;Limitations of Language&#34;</p>
-        <p>Various Clips from TV Advertisements</p>
-        <p>All instruments and production by <a href="http://kristo-portfolio.vercel.app"><span className="text-sky-400">Kr1st0</span></a></p>
-      </div>
+      <LinerNotes currentSongIndex={currentSongIndex}/>
     </main>
   )
 }
