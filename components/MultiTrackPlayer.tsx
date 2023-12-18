@@ -31,7 +31,7 @@ const MultiTrackPlayer = () => {
     return null;
   }
 
-  const { isMuted, isLoading, isPlaying, currentSongIndex, prevSong, nextSong, playPauseTracks, toggleMuteTrack } = audio;
+  const { isMuted, isLoading, isPlaying, trackLinerNotes, currentSongIndex, prevSong, nextSong, playPauseTracks, toggleMuteTrack } = audio;
 
   const updateProgress = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
     // if (!audioContext || !trackSources.current.length) return;
@@ -75,7 +75,7 @@ const nextSongHandler = () => {
         <img className="cover-image" src={`images/cover${currentSongIndex}.png`} />
           
           <div className="flex flex-col px-2">
-              <h4 className="flex" ref={titleRef}>Angels, Gurus and Advertising</h4>
+              <h4 className="flex" ref={titleRef}>${trackLinerNotes[currentSongIndex].title}</h4>
               <div className="progress-container flex" ref={progressContainerRef} onClick={setProgress}>
                   <div className="progress" ref={progressRef}></div>
               </div>

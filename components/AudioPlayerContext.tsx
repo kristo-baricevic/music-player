@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useState, useEffect, useRef, useCallback } from 'react';
 
 // Define the shape of your context state
 interface AudioContextState {
@@ -8,6 +8,16 @@ interface AudioContextState {
     isPlaying: boolean;
     isLoading: boolean;
     currentSongIndex: number;
+    trackLinerNotes: {
+      id: number; 
+      title: string; 
+      samples: {
+        parts: {
+          text: string; 
+          link?: string;
+        }[];
+      }[];
+    }[];
     nextSong: () => void;
     prevSong: () => void;
     isMuted: boolean[];
@@ -15,11 +25,111 @@ interface AudioContextState {
     gainNodes: GainNode[];
     playPauseTracks: () => void;
     toggleMuteTrack: (trackIndex: number) => void;
-}
+};
 
 type AudioProviderProps = {
     children: React.ReactNode;
   };
+
+const trackLinerNotes = [{
+  id: 1,
+  title: "Angels, Gurus & Advertising",
+  samples: [
+    {
+        parts: [
+            {
+                text: "Loser's Lament by ",
+            },
+            {
+                text: "Davie Allen & the Arrows",
+                link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
+            },
+        ],
+    },
+    {
+        parts: [
+            {
+                text: "String Gourd Instrument from Allan Lomax's Songs of Thailand",
+            },
+        ],
+    },
+    {
+        parts: [
+            {
+                text: "Alan Watts' 'Limitations of Language' ",
+            },
+        ],
+    },
+    {
+        parts: [
+            {
+                text: "Various Clips from TV Advertisements",
+            },
+        ],
+    },
+    {
+        parts: [
+            {
+                text: "All instruments and production by ",
+            },
+            {
+                text: "Kr1st0",
+                link: "http://kristo-portfolio.vercel.app/",
+            },
+        ],
+    },
+  ],
+},
+{
+  id: 2,
+  title: "Second Song",
+  samples: [
+    {
+        parts: [
+            {
+                text: "Save the People ",
+            },
+            {
+                text: "Eddie Kendricks",
+                link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
+              },
+          ],
+      },
+      {
+          parts: [
+              {
+                  text: "Interview with George Jackson",
+              },
+          ],
+      },
+      {
+          parts: [
+              {
+                  text: "Fred Hampton documentary",
+              },
+          ],
+      },
+      {
+          parts: [
+              {
+                  text: "Audre Lord poem",
+              },
+          ],
+      },
+      {
+          parts: [
+              {
+                  text: "All instruments and production by ",
+              },
+              {
+                  text: "Kr1st0",
+                  link: "http://kristo-portfolio.vercel.app/",
+              },
+          ],
+      },
+    ],
+  },
+]
 
 // Create the context
 export const AudioPlayerContext = createContext<AudioContextState | undefined>(undefined);
@@ -37,6 +147,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     const startTime = useRef<number>(0);
     const pauseTime = useRef<number>(0);
     
+  // useEffect creates an instance of AudioContext
   useEffect(() => {
     let ac: AudioContext | null = null;
     let usingWebAudio = true
@@ -54,7 +165,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
         ac = null;
     }
 
-    // context state at this time is `undefined` in iOS8 Safari
+    // context state is `undefined` in iOS Safari
     if (usingWebAudio && ac && ac.state === 'suspended') {
     const resume = function () {
       ac?.resume();
@@ -82,46 +193,47 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     return () => {};
   }, []);
       
+  //create buffer functions with newly returned Audio Context
+  const loadBuffer = useCallback(async (url: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(url);
+      const arrayBuffer = await response.arrayBuffer();
+      return await audioContext?.decodeAudioData(arrayBuffer);
+    } catch (error) {
+      console.error('Error loading audio file:', error);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [audioContext]);
 
+  const loadSongBuffers = useCallback(async (songIndex: number) => {
+    const basePath = `/music/song${songIndex + 1}`;
+    const bufferPromises = [
+      loadBuffer(`${basePath}/track1.mp3`),
+      loadBuffer(`${basePath}/track2.mp3`),
+      loadBuffer(`${basePath}/track3.mp3`),
+    ];
+
+    const loadedBuffers = await Promise.all(bufferPromises);
+    const validBuffers = loadedBuffers.filter((buffer): buffer is AudioBuffer => buffer !== null);
+    setBuffers(validBuffers);
+  }, [loadBuffer]);
+
+  //load initial song buffers 
   useEffect(() => {
     if (!audioContext) return;
   
-    const loadBuffer = async (url: string) => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(url);
-        const arrayBuffer = await response.arrayBuffer();
-        return await audioContext.decodeAudioData(arrayBuffer);
-      } catch (error) {
-        console.error('Error loading audio file:', error);
-        return null;
-      } finally {
-        setIsLoading(false);
-      }
-    };
-  
-    const loadSongBuffers = async (songIndex: number) => {
-      const basePath = `/music/song${songIndex + 1}`;
-      const bufferPromises = [
-        loadBuffer(`${basePath}/track1.mp3`),
-        loadBuffer(`${basePath}/track2.mp3`),
-        loadBuffer(`${basePath}/track3.mp3`),
-      ];
-      const loadedBuffers = await Promise.all(bufferPromises);
-      const validBuffers = loadedBuffers.filter((buffer): buffer is AudioBuffer => buffer !== null);
-      setBuffers(validBuffers);
-    };
-  
     loadSongBuffers(currentSongIndex);
-  }, [audioContext, currentSongIndex]);
+  }, [audioContext, loadSongBuffers, currentSongIndex]);
   
   useEffect(() => {
     if (!isPlaying || !audioContext) return;
   
-    // Load new song buffers
+  // Load new song buffers
   }, [currentSongIndex, isPlaying, audioContext]);
   
-
 
   const playPauseTracks = async () => {
     if (!audioContext || buffers.length < 3) {
@@ -132,7 +244,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     if (audioContext.state === 'suspended') {
       await audioContext.resume();
     }
-  
+
     if (isPlaying) {
       // Pause the tracks
       pauseTime.current = audioContext.currentTime - startTime.current;
@@ -149,7 +261,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       });
 
       // Schedule start time slightly in the future to ensure synchronization
-      const scheduleTime = audioContext.currentTime + 0.1; // 100 ms in the future
+      const scheduleTime = audioContext.currentTime + 0.1; 
       trackSources.current.forEach(source => {
         source.start(scheduleTime, pauseTime.current || 0);
       });
@@ -168,18 +280,36 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   };
 
   // Add next and previous song functions
-  const nextSong = () => {
-    const nextIndex = (currentSongIndex + 1) % 2; // Assuming 10 songs
+  const nextSong = async () => {
+    const nextIndex = (currentSongIndex + 1) % 2;
     setCurrentSongIndex(nextIndex);
+
+    if (isPlaying) {
+      trackSources.current.forEach(source => {
+        source.stop();
+        source.disconnect();
+      });
+    }
+
+    await loadSongBuffers(nextIndex); 
   };
 
-  const prevSong = () => {
-    const prevIndex = (currentSongIndex - 1 + 10) % 2; // Assuming 10 songs
+  const prevSong = async () => {
+    const prevIndex = (currentSongIndex - 1 + 2) % 2;
     setCurrentSongIndex(prevIndex);
+
+    if (isPlaying) {
+      trackSources.current.forEach(source => {
+        source.stop();
+        source.disconnect();
+      });
+    }
+
+    await loadSongBuffers(prevIndex);
   };
 
   return (
-    <AudioPlayerContext.Provider value={{ isPlaying, currentSongIndex, isLoading, nextSong, prevSong, playPauseTracks, audioContext, isMuted, buffers, gainNodes, toggleMuteTrack }}>
+    <AudioPlayerContext.Provider value={{ isPlaying, trackLinerNotes, currentSongIndex, isLoading, nextSong, prevSong, playPauseTracks, audioContext, isMuted, buffers, gainNodes, toggleMuteTrack }}>
       {children}
     </AudioPlayerContext.Provider>
   );
