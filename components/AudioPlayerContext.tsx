@@ -289,9 +289,11 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
         source.stop();
         source.disconnect();
       });
+    setIsPlaying(false);
     }
 
     await loadSongBuffers(nextIndex); 
+    setIsPlaying(false);
   };
 
   const prevSong = async () => {
@@ -303,9 +305,10 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
         source.stop();
         source.disconnect();
       });
-    }
+    };
 
     await loadSongBuffers(prevIndex);
+    setIsPlaying(false);
   };
 
   return (
