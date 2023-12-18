@@ -7,6 +7,7 @@ interface AudioContextState {
     audioContext: AudioContext | null;
     isPlaying: boolean;
     isLoading: boolean;
+    currentSongIndex: number;
     nextSong: () => void;
     prevSong: () => void;
     isMuted: boolean[];
@@ -117,9 +118,6 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   useEffect(() => {
     if (!isPlaying || !audioContext) return;
   
-    // Pause the current playback
-    playPauseTracks();
-  
     // Load new song buffers
   }, [currentSongIndex, isPlaying, audioContext]);
   
@@ -171,17 +169,17 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
 
   // Add next and previous song functions
   const nextSong = () => {
-    const nextIndex = (currentSongIndex + 1) % 10; // Assuming 10 songs
+    const nextIndex = (currentSongIndex + 1) % 2; // Assuming 10 songs
     setCurrentSongIndex(nextIndex);
   };
 
   const prevSong = () => {
-    const prevIndex = (currentSongIndex - 1 + 10) % 10; // Assuming 10 songs
+    const prevIndex = (currentSongIndex - 1 + 10) % 2; // Assuming 10 songs
     setCurrentSongIndex(prevIndex);
   };
 
   return (
-    <AudioPlayerContext.Provider value={{ isPlaying, isLoading, nextSong, prevSong, playPauseTracks, audioContext, isMuted, buffers, gainNodes, toggleMuteTrack }}>
+    <AudioPlayerContext.Provider value={{ isPlaying, currentSongIndex, isLoading, nextSong, prevSong, playPauseTracks, audioContext, isMuted, buffers, gainNodes, toggleMuteTrack }}>
       {children}
     </AudioPlayerContext.Provider>
   );
