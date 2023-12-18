@@ -31,7 +31,7 @@ const MultiTrackPlayer = () => {
     return null;
   }
 
-  const { isMuted, isLoading, isPlaying, playPauseTracks, toggleMuteTrack } = audio;
+  const { isMuted, isLoading, isPlaying, prevSong, nextSong, playPauseTracks, toggleMuteTrack } = audio;
 
   const updateProgress = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
     // if (!audioContext || !trackSources.current.length) return;
@@ -49,14 +49,6 @@ const MultiTrackPlayer = () => {
     if (audioRef.current) audioRef.current.currentTime = (clickX / width) * duration;
   };
 
-  const prevSong = () => {
- 
-  };
-
-  const nextSong = () => {
-  
-  };
-
   const handleClickPlayPause = () => {
     console.log("click");
     playPauseTracks();
@@ -66,6 +58,15 @@ const MultiTrackPlayer = () => {
       musicContainerRef.current?.classList.add('play');
     }
   }
+
+
+const prevSongHandler = () => {
+  prevSong();
+};
+
+const nextSongHandler = () => {
+  nextSong();
+};
 
   return (
     <>
@@ -81,7 +82,7 @@ const MultiTrackPlayer = () => {
         </div>
         <div className="container-background">
           <div className="navigation">
-              <button ref={prevBtnRef} className="action-btn" onClick={prevSong}>
+              <button ref={prevBtnRef} className="action-btn" onClick={prevSongHandler}>
                   <FontAwesomeIcon icon={faBackward} />
               </button>
               <button ref={playBtnRef} className="action-btn action-btn-big" onClick={handleClickPlayPause}>
@@ -91,7 +92,7 @@ const MultiTrackPlayer = () => {
                   <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
                 }
               </button>
-              <button ref={nextBtnRef} className="action-btn" onClick={nextSong}>
+              <button ref={nextBtnRef} className="action-btn" onClick={nextSongHandler}>
                   <FontAwesomeIcon icon={faForward} />
               </button>
           </div>
