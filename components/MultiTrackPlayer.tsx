@@ -57,23 +57,21 @@ const MultiTrackPlayer = () => {
     } else {
       musicContainerRef.current?.classList.add('play');
     }
-  }
+  };
 
+  const prevSongHandler = () => {
+    prevSong();
+  };
 
-const prevSongHandler = () => {
-  prevSong();
-};
-
-const nextSongHandler = () => {
-  nextSong();
-};
+  const nextSongHandler = () => {
+    nextSong();
+  };
 
   return (
     <>
       <div ref={musicContainerRef} className="music-container" id="music-container">
         <div className="music-info">
         <img className="cover-image" src={`images/cover${currentSongIndex}.png`} />
-          
           <div className="flex flex-col px-2">
               <h4 className="flex" ref={titleRef}>{trackLinerNotes[currentSongIndex].title}</h4>
               <div className="progress-container flex" ref={progressContainerRef} onClick={setProgress}>
@@ -98,36 +96,35 @@ const nextSongHandler = () => {
               </button>
           </div>
         </div>
-      <div className="flex flex-row items-center justify-center z-20 mt-6">
-        {[0, 1, 2].map(trackIndex => (
-          <button 
-            key={trackIndex}
-            className="playButton flex mx-4 bg-cyan-700 p-4 hover:bg-cyan-600 active:bg-cyan-900 ml-2 rounded-full" 
-            onClick={() => toggleMuteTrack(trackIndex)}
-          >
-            {
-              trackIndex === 0 ? (
-                isMuted[trackIndex] ? 
-                  <FontAwesomeIcon icon={faGuitar} size="2xl" fade/>
-                : 
-                  <FontAwesomeIcon icon={faGuitar} size="2xl" />
-              ) : trackIndex === 1 ? ( 
-                isMuted[trackIndex] ? 
-                  <FontAwesomeIcon icon={faMicrophone} size="2xl" fade/>
-                : 
-                  <FontAwesomeIcon icon={faMicrophone} size="2xl" />
-              ) : (
-                isMuted[trackIndex] ? 
-                  <FontAwesomeIcon icon={faDrum} size="2xl" fade/>
-                : 
-                  <FontAwesomeIcon icon={faDrum} size="2xl"/>
-              )
-            }
-          </button>
-        ))}
+        <div className="flex flex-row items-center justify-center z-20 mt-6">
+          {[0, 1, 2].map(trackIndex => (
+            <button 
+              key={trackIndex}
+              className="playButton flex mx-4 bg-cyan-700 p-4 hover:bg-cyan-600 active:bg-cyan-900 ml-2 rounded-full" 
+              onClick={() => toggleMuteTrack(trackIndex)}
+            >
+              {
+                trackIndex === 0 ? (
+                  isMuted[trackIndex] ? 
+                    <FontAwesomeIcon icon={faGuitar} size="2xl" fade/>
+                  : 
+                    <FontAwesomeIcon icon={faGuitar} size="2xl" />
+                ) : trackIndex === 1 ? ( 
+                  isMuted[trackIndex] ? 
+                    <FontAwesomeIcon icon={faMicrophone} size="2xl" fade/>
+                  : 
+                    <FontAwesomeIcon icon={faMicrophone} size="2xl" />
+                ) : (
+                  isMuted[trackIndex] ? 
+                    <FontAwesomeIcon icon={faDrum} size="2xl" fade/>
+                  : 
+                    <FontAwesomeIcon icon={faDrum} size="2xl"/>
+                )
+              }
+            </button>
+          ))}
+        </div>
       </div>
-      </div>
-
     </>
   );
 };

@@ -136,16 +136,16 @@ export const AudioPlayerContext = createContext<AudioContextState | undefined>(u
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     
-    const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-    const [currentSongIndex, setCurrentSongIndex] = useState(0);
-    const [buffers, setBuffers] = useState<AudioBuffer[]>([]);
-    const [gainNodes, setGainNodes] = useState<GainNode[]>([]);
-    const [isMuted, setIsMuted] = useState<boolean[]>([false, false, false]);
-    const [isPlaying, setIsPlaying] = useState<boolean>(false);
-    const [isLoading, setIsLoading] =useState<boolean>(false);
-    const trackSources = useRef<AudioBufferSourceNode[]>([]);
-    const startTime = useRef<number>(0);
-    const pauseTime = useRef<number>(0);
+  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const [buffers, setBuffers] = useState<AudioBuffer[]>([]);
+  const [gainNodes, setGainNodes] = useState<GainNode[]>([]);
+  const [isMuted, setIsMuted] = useState<boolean[]>([false, false, false]);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isLoading, setIsLoading] =useState<boolean>(false);
+  const trackSources = useRef<AudioBufferSourceNode[]>([]);
+  const startTime = useRef<number>(0);
+  const pauseTime = useRef<number>(0);
     
   // useEffect creates an instance of AudioContext
   useEffect(() => {

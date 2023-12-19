@@ -40,7 +40,7 @@ export default function Home() {
   function createSky() {
     const nightSky = document.getElementById('night-sky');
     const numberOfStars = 300; 
-
+    const skyColor = getRandomColor();
     for (let i = 0; i < numberOfStars; i++) {
       const star = document.createElement('div');
       star.className = 'star';
@@ -49,6 +49,7 @@ export default function Home() {
       const starSize = Math.random() * 2 + 1;
       star.style.width = `${starSize}px`;
       star.style.height = `${starSize}px`;
+      star.style.backgroundColor = skyColor; 
 
       // Random position within the container
       if (nightSky) {
@@ -70,7 +71,7 @@ export default function Home() {
       });
   }};
 
-  useEffect(() => {
+  function animationForSong1() {
     gsap.to(".box", 
       { 
         rotate: 360,
@@ -105,15 +106,87 @@ export default function Home() {
 
     createStarburst(100, .04);
     createSky();
-  }, []);
+  };
+
+  function animationForSong2() {
+    gsap.to(".box", 
+      { 
+        rotate: 360,
+        y: 50,
+        duration: 2,
+      }
+    );
+
+    gsap.fromTo(".sample-info h3", 
+      { opacity: 0 }, 
+      { opacity: 1, 
+        duration: 2, 
+        delay: 2 }
+    );
+
+    gsap.fromTo(".sample-info p", 
+      { opacity: 0 }, 
+      { opacity: 1, 
+        duration: 2.5, 
+        delay: 2.15 }
+    );
+
+    gsap.to('.letter', 
+      { color: '#fe8daa', 
+      duration: 1.5, 
+      repeat: -1, 
+      yoyo: true, 
+      delay: 1,
+      stagger: .5,
+      repeatDelay: .5
+    });
+
+    createStarburst(10, .3);
+    createSky();
+  };
+
+  function clearAnimations() {
+    // Clear GSAP animations
+    gsap.killTweensOf('.box, .letter, .star, .line');
+  
+    // Clear existing stars and lines
+    const starburstContainer = document.getElementById('starburst');
+    const nightSkyContainer = document.getElementById('night-sky');
+    if (starburstContainer) {
+      starburstContainer.innerHTML = '';
+    }
+    if (nightSkyContainer){
+      nightSkyContainer.innerHTML = '';
+    }
+  }
 
   const audio = useContext(AudioPlayerContext);
-
-  if (!audio) {
-    return null;
-  }
   
+  useEffect(() => {
+    if (audio) {
+    const { currentSongIndex } = audio;
+
+    // stop current animation
+    clearAnimations();
+
+    switch (currentSongIndex) {
+      case 0:
+        animationForSong1();
+        break;
+      case 1:
+        animationForSong2();
+        break;
+      default:
+        break;
+    }}
+  }, [audio?.currentSongIndex]);
+
+  if (!audio) { 
+    return null 
+  }
+
   const { currentSongIndex } = audio;
+
 
   return (
     <main className="flex flex-col min-h-screen items-center justify-center">
