@@ -36,47 +36,47 @@ const trackLinerNotes = [{
   title: "Angels, Gurus & Advertising",
   samples: [
     {
-        parts: [
-            {
-                text: "Loser's Lament by ",
-            },
-            {
-                text: "Davie Allen & the Arrows",
-                link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
-            },
-        ],
+      parts: [
+        {
+          text: "Loser's Lament by ",
+        },
+        {
+          text: "Davie Allen & the Arrows",
+          link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
+        },
+      ],
     },
     {
-        parts: [
-            {
-                text: "String Gourd Instrument from Allan Lomax's Songs of Thailand",
-            },
-        ],
+      parts: [
+        {
+          text: "String Gourd Instrument from Allan Lomax's Songs of Thailand",
+        },
+      ],
     },
     {
-        parts: [
-            {
-                text: "Alan Watts' 'Limitations of Language' ",
-            },
-        ],
+      parts: [
+        { 
+          text: "Alan Watts' 'Limitations of Language' ",
+        },
+      ],
     },
     {
-        parts: [
-            {
-                text: "Various Clips from TV Advertisements",
-            },
-        ],
+      parts: [
+        {
+          text: "Various Clips from TV Advertisements",
+        },
+      ],
     },
     {
-        parts: [
-            {
-                text: "All instruments and production by ",
-            },
-            {
-                text: "Kr1st0",
-                link: "http://kristo-portfolio.vercel.app/",
-            },
-        ],
+      parts: [
+        {
+          text: "All instruments and production by ",
+        },
+        {
+          text: "Kr1st0",
+          link: "http://kristo-portfolio.vercel.app/",
+        },
+      ],
     },
   ],
 },
@@ -180,93 +180,92 @@ const trackLinerNotes = [{
     },
     ],
   },
-
-{
-  id: 4,
-  title: "Weezy WorldWyde ft. Lil Wayne",
-  samples: [
-    {
-        parts: [
-            {
-                text: "Worldwide by ",
-            },
-            {
-                text: "Allen Toussaint",
-                link: "https://www.youtube.com/watch?v=VbOD2PdaBGE&ab_channel=getamoodon",
-              },
-          ],
-      },
+  {
+    id: 4,
+    title: "Weezy WorldWyde ft. Lil Wayne",
+    samples: [
       {
-          parts: [
-              {
-                  text: "Dialogue from ",
-              },
-              {
-                text: "Nardwaur vs Lil Wayne",
-                link: "https://www.youtube.com/watch?v=wgMUhI_SN68&ab_channel=NardwuarServiette",
-              },
-          ],
+        parts: [
+          {
+            text: "Worldwide by ",
+          },
+          {
+            text: "Allen Toussaint",
+            link: "https://www.youtube.com/watch?v=VbOD2PdaBGE&ab_channel=getamoodon",
+          },
+        ],
       },
       {
         parts: [
-            {
-                text: "All instruments and production by ",
-            },
-            {
-                text: "Kr1st0",
-                link: "http://kristo-portfolio.vercel.app/",
-            },
-          ],
+          {
+            text: "Dialogue from ",
+          },
+          {
+            text: "Nardwaur vs Lil Wayne",
+            link: "https://www.youtube.com/watch?v=wgMUhI_SN68&ab_channel=NardwuarServiette",
+          },
+        ],
+      },
+      {
+        parts: [
+          {
+            text: "All instruments and production by ",
+          },
+          {
+            text: "Kr1st0",
+            link: "http://kristo-portfolio.vercel.app/",
+          },
+        ],
       },
     ],
   },
-{
-  id: 5,
-  title: "Alphaville, Tennessee",
-  samples: [
-    {
-      parts: [
-        {
-          text: "Memphis, Tennessee by ",
-        },
-        {
-          text: "Wilson Pickett",
-          link: "https://www.youtube.com/watch?v=ud1IJ7Ok2ZQ&ab_channel=WilsonPickett-Topic",
-        },
-      ],
-    },
-    {
-      parts: [
-        {
-            text: "A Generative AI reading of the opening scene from ",
-        },
-        {
-            text: "Alphaville by Jean-Luc Godard",
-            link: "https://www.youtube.com/watch?v=UitB6c8QP80&ab_channel=KatrinMiaHerrnsdorf",
-        },
-      ],
-    },
+  {
+    id: 5,
+    title: "Alphaville, Tennessee",
+    samples: [
       {
-          parts: [
-              {
-                text: "Dialogue from",
-              },
-              {
-                text: "A Fire in the Sky",
-                link: "https://www.youtube.com/watch?v=I8C_JaT8Lvg&list=PLNrdVOgc5C74uz9JbsQnpgODDFdhjCXRH&index=386&ab_channel=TRANSTARLEXINGTON",
-            },
-          ],
+        parts: [
+          {
+            text: "Memphis, Tennessee by ",
+          },
+          {
+            text: "Wilson Pickett",
+            link: "https://www.youtube.com/watch?v=ud1IJ7Ok2ZQ&ab_channel=WilsonPickett-Topic",
+          },
+        ],
       },
       {
-          parts: [
-              {
-                  text: "All instruments and production by ",
-              },
-              {
-                  text: "Kr1st0",
-                  link: "http://kristo-portfolio.vercel.app/",
-              },
-          ],
+        parts: [
+          {
+              text: "A Generative AI reading of the opening scene from ",
+          },
+          {
+              text: "Alphaville by Jean-Luc Godard",
+              link: "https://www.youtube.com/watch?v=UitB6c8QP80&ab_channel=KatrinMiaHerrnsdorf",
+          },
+        ],
+      },
+      {
+        parts: [
+          {
+            text: "Dialogue from ",
+          },
+          {
+            text: "A Fire in the Sky",
+            link: "https://www.youtube.com/watch?v=I8C_JaT8Lvg&list=PLNrdVOgc5C74uz9JbsQnpgODDFdhjCXRH&index=386&ab_channel=TRANSTARLEXINGTON",
+          },
+        ],
+      },
+      {
+        parts: [
+          {
+            text: "All instruments and production by ",
+          },
+          {
+          text: "Kr1st0",
+            link: "http://kristo-portfolio.vercel.app/",
+          },
+        ],
       },
     ],
   },
