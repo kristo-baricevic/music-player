@@ -3,7 +3,7 @@ import { AudioPlayerContext } from './AudioPlayerContext';
 
 interface CurrentTrackLinerNotesProps {
     currentSongIndex: number;
-  }
+}
 
 const LinerNotes: React.FC<CurrentTrackLinerNotesProps> = ({ currentSongIndex }) => {
 const audio = useContext(AudioPlayerContext);

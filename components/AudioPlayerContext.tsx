@@ -82,7 +82,7 @@ const trackLinerNotes = [{
 },
 {
   id: 2,
-  title: "...Never Meant to Survive",
+  title: "Struggle & Triumph",
   samples: [
     {
         parts: [
@@ -113,6 +113,120 @@ const trackLinerNotes = [{
           parts: [
               {
                   text: "Audre Lord poem",
+              },
+          ],
+      },
+      {
+          parts: [
+              {
+                  text: "All instruments and production by ",
+              },
+              {
+                  text: "Kr1st0",
+                  link: "http://kristo-portfolio.vercel.app/",
+              },
+          ],
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: "Power of Mars",
+    samples: [
+      {
+          parts: [
+              {
+                  text: "Dialogue from ",
+              },
+              {
+                  text: "Devil Girl from Mars",
+                  link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
+                },
+            ],
+        },
+        {
+            parts: [
+              {
+                  text: "Dialogue from ",
+              },
+              {
+                text: "Doctor of Doom",
+                link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
+              },
+            ],
+        },
+        {
+            parts: [
+                {
+                    text: "All instruments and production by ",
+                },
+                {
+                    text: "Kr1st0",
+                    link: "http://kristo-portfolio.vercel.app/",
+                },
+            ],
+        },
+      ],
+    },
+
+{
+  id: 4,
+  title: "Weezy WorldWyde ft. Lil Wayne",
+  samples: [
+    {
+        parts: [
+            {
+                text: "Worldwide by ",
+            },
+            {
+                text: "Allen Toussaint",
+                link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
+              },
+          ],
+      },
+      {
+          parts: [
+              {
+                  text: "Interview with Lil Wayne from ",
+              },
+              {
+                text: "Nardwaur the Subservient",
+                link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
+              },
+          ],
+      },
+      {
+          parts: [
+              {
+                  text: "All instruments and production by ",
+              },
+              {
+                  text: "Kr1st0",
+                  link: "http://kristo-portfolio.vercel.app/",
+              },
+          ],
+      },
+    ],
+  },
+{
+  id: 5,
+  title: "Alphaville, Tennessee",
+  samples: [
+    {
+        parts: [
+            {
+                text: "A Generative AI reading of the opening scene from ",
+            },
+            {
+                text: "Alphaville by Jean-Luc Godard",
+                link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
+              },
+          ],
+      },
+      {
+          parts: [
+              {
+                  text: "Doctor doom maybe",
               },
           ],
       },
@@ -281,7 +395,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
 
   // Add next and previous song functions
   const nextSong = async () => {
-    const nextIndex = (currentSongIndex + 1) % 2;
+    const nextIndex = (currentSongIndex + 1) % 5;
     setCurrentSongIndex(nextIndex);
 
     if (isPlaying) {
@@ -297,7 +411,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   };
 
   const prevSong = async () => {
-    const prevIndex = (currentSongIndex - 1 + 2) % 2;
+    const prevIndex = (currentSongIndex - 1 + 5) % 5;
     setCurrentSongIndex(prevIndex);
 
     if (isPlaying) {

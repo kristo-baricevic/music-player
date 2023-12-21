@@ -145,6 +145,117 @@ export default function Home() {
     createSky();
   };
 
+  function animationForSong3() {
+    gsap.to(".box", 
+      { 
+        rotate: 360,
+        y: 50,
+        duration: 2,
+      }
+    );
+
+    gsap.fromTo(".sample-info h3", 
+      { opacity: 0 }, 
+      { opacity: 1, 
+        duration: 2, 
+        delay: 2 }
+    );
+
+    gsap.fromTo(".sample-info p", 
+      { opacity: 0 }, 
+      { opacity: 1, 
+        duration: 2.5, 
+        delay: 2.15 }
+    );
+
+    gsap.to('.letter', 
+      { color: '#fe8daa', 
+      duration: 1.5, 
+      repeat: -1, 
+      yoyo: true, 
+      delay: 1,
+      stagger: .5,
+      repeatDelay: .5
+    });
+
+    createStarburst(10, .3);
+    createSky();
+  };
+
+  function animationForSong4() {
+    gsap.to(".box", 
+      { 
+        rotate: 360,
+        y: 50,
+        duration: 2,
+      }
+    );
+
+    gsap.fromTo(".sample-info h3", 
+      { opacity: 0 }, 
+      { opacity: 1, 
+        duration: 2, 
+        delay: 2 }
+    );
+
+    gsap.fromTo(".sample-info p", 
+      { opacity: 0 }, 
+      { opacity: 1, 
+        duration: 2.5, 
+        delay: 2.15 }
+    );
+
+    gsap.to('.letter', 
+      { color: '#fe8daa', 
+      duration: 1.5, 
+      repeat: -1, 
+      yoyo: true, 
+      delay: 1,
+      stagger: .5,
+      repeatDelay: .5
+    });
+
+    createStarburst(10, .3);
+    createSky();
+  };
+
+  function animationForSong5() {
+    gsap.to(".box", 
+      { 
+        rotate: 360,
+        y: 50,
+        duration: 2,
+      }
+    );
+
+    gsap.fromTo(".sample-info h3", 
+      { opacity: 0 }, 
+      { opacity: 1, 
+        duration: 2, 
+        delay: 2 }
+    );
+
+    gsap.fromTo(".sample-info p", 
+      { opacity: 0 }, 
+      { opacity: 1, 
+        duration: 2.5, 
+        delay: 2.15 }
+    );
+
+    gsap.to('.letter', 
+      { color: '#fe8daa', 
+      duration: 1.5, 
+      repeat: -1, 
+      yoyo: true, 
+      delay: 1,
+      stagger: .5,
+      repeatDelay: .5
+    });
+
+    createStarburst(10, .3);
+    createSky();
+  };
+
   function clearAnimations() {
     // Clear GSAP animations
     gsap.killTweensOf('.box, .letter, .star, .line');
@@ -175,6 +286,15 @@ export default function Home() {
         break;
       case 1:
         animationForSong2();
+        break;
+      case 2:
+        animationForSong3();
+        break;
+      case 3:
+        animationForSong4();
+        break;
+      case 4:
+        animationForSong5();
         break;
       default:
         break;
