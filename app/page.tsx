@@ -178,7 +178,7 @@ export default function Home() {
       repeatDelay: .5
     });
 
-    createStarburst(10, .3);
+    createStarburst(140, .5);
     createSky();
   };
 
@@ -215,7 +215,7 @@ export default function Home() {
       repeatDelay: .5
     });
 
-    createStarburst(10, .3);
+    createStarburst(300, .2);
     createSky();
   };
 
@@ -252,7 +252,7 @@ export default function Home() {
       repeatDelay: .5
     });
 
-    createStarburst(10, .3);
+    createStarburst(75, .03);
     createSky();
   };
 
