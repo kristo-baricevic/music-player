@@ -98,7 +98,7 @@ const trackLinerNotes = [{
     {
       parts: [
         {
-            text: "Interview with ",
+          text: "Interview with ",
         },
         {
           text: "George Jackson",
@@ -109,7 +109,7 @@ const trackLinerNotes = [{
     {
       parts: [
         {
-            text: "Interview with ",
+          text: "Interview with ",
         },
         {
           text: "Huey Newton",
@@ -142,11 +142,11 @@ const trackLinerNotes = [{
       {
         parts: [
           {
-              text: "All instruments and production by ",
+            text: "All instruments and production by ",
           },
           {
-              text: "Kr1st0",
-              link: "http://kristo-portfolio.vercel.app/",
+            text: "Kr1st0",
+            link: "http://kristo-portfolio.vercel.app/",
           },
         ],
       },
@@ -170,11 +170,11 @@ const trackLinerNotes = [{
     {
       parts: [
         {
-            text: "All instruments and production by ",
+          text: "All instruments and production by ",
         },
         {
-            text: "Kr1st0",
-            link: "http://kristo-portfolio.vercel.app/",
+          text: "Kr1st0",
+          link: "http://kristo-portfolio.vercel.app/",
         },
       ],
     },
