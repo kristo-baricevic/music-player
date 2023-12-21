@@ -146,17 +146,6 @@ const trackLinerNotes = [{
         },
         {
             parts: [
-              {
-                  text: "Dialogue from ",
-              },
-              {
-                text: "Doctor of Doom",
-                link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
-              },
-            ],
-        },
-        {
-            parts: [
                 {
                     text: "All instruments and production by ",
                 },
