@@ -85,47 +85,70 @@ const trackLinerNotes = [{
   title: "Struggle & Triumph",
   samples: [
     {
+      parts: [
+        {
+          text: "Save the People ",
+        },
+        {
+          text: "Eddie Kendricks",
+          link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
+        },
+      ],
+    },
+    {
+      parts: [
+        {
+            text: "Interview with ",
+        },
+        {
+          text: "George Jackson",
+          link: "https://www.youtube.com/watch?v=qspVurxa_yw&ab_channel=AfroMarxist",
+        }
+      ],
+    },
+    {
+      parts: [
+        {
+            text: "Interview with ",
+        },
+        {
+          text: "Huey Newton",
+          link: "https://www.youtube.com/watch?v=9a9v2JsycbU&ab_channel=AfroMarxist",
+        }
+      ],
+    },
+    {
+      parts: [
+        {
+          text: "Fred Hampton dialogue from ",
+        },
+        {
+          text: "Documentary",
+          link: "https://www.youtube.com/watch?v=w-RxvgIMfX4&ab_channel=TheBlackestPanther",
+        }
+      ],
+    },
+    {
+      parts: [
+        {
+          text: "Audre Lord reading her poem",
+        },
+        {
+          text: "A Litany for Survival",
+          link: "https://www.poetryfoundation.org/poems/147275/a-litany-for-survival",
+        }
+      ],
+    },
+      {
         parts: [
-            {
-                text: "Save the People ",
-            },
-            {
-                text: "Eddie Kendricks",
-                link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
-              },
-          ],
-      },
-      {
-          parts: [
-              {
-                  text: "Interview with George Jackson",
-              },
-          ],
-      },
-      {
-          parts: [
-              {
-                  text: "Fred Hampton documentary",
-              },
-          ],
-      },
-      {
-          parts: [
-              {
-                  text: "Audre Lord poem",
-              },
-          ],
-      },
-      {
-          parts: [
-              {
-                  text: "All instruments and production by ",
-              },
-              {
-                  text: "Kr1st0",
-                  link: "http://kristo-portfolio.vercel.app/",
-              },
-          ],
+          {
+              text: "All instruments and production by ",
+          },
+          {
+              text: "Kr1st0",
+              link: "http://kristo-portfolio.vercel.app/",
+          },
+        ],
       },
     ],
   },
@@ -133,30 +156,30 @@ const trackLinerNotes = [{
     id: 3,
     title: "Power of Mars",
     samples: [
-      {
-          parts: [
-              {
-                  text: "Dialogue from ",
-              },
-              {
-                  text: "Devil Girl from Mars",
-                  link: "https://www.youtube.com/watch?v=yr0s1y5BwHk&ab_channel=communiTV",
-                },
-            ],
+    {
+      parts: [
+        {
+            text: "Dialogue from ",
         },
         {
-            parts: [
-                {
-                    text: "All instruments and production by ",
-                },
-                {
-                    text: "Kr1st0",
-                    link: "http://kristo-portfolio.vercel.app/",
-                },
-            ],
+          text: "Devil Girl from Mars",
+          link: "https://www.youtube.com/watch?v=yr0s1y5BwHk&ab_channel=communiTV",
         },
       ],
     },
+    {
+      parts: [
+        {
+            text: "All instruments and production by ",
+        },
+        {
+            text: "Kr1st0",
+            link: "http://kristo-portfolio.vercel.app/",
+        },
+      ],
+    },
+    ],
+  },
 
 {
   id: 4,
@@ -202,21 +225,36 @@ const trackLinerNotes = [{
   title: "Alphaville, Tennessee",
   samples: [
     {
-        parts: [
-            {
-                text: "A Generative AI reading of the opening scene from ",
-            },
-            {
-                text: "Alphaville by Jean-Luc Godard",
-                link: "https://www.youtube.com/watch?v=UitB6c8QP80&ab_channel=KatrinMiaHerrnsdorf",
-              },
-          ],
-      },
+      parts: [
+        {
+          text: "Memphis, Tennessee by ",
+        },
+        {
+          text: "Wilson Pickett",
+          link: "https://www.youtube.com/watch?v=ud1IJ7Ok2ZQ&ab_channel=WilsonPickett-Topic",
+        },
+      ],
+    },
+    {
+      parts: [
+        {
+            text: "A Generative AI reading of the opening scene from ",
+        },
+        {
+            text: "Alphaville by Jean-Luc Godard",
+            link: "https://www.youtube.com/watch?v=UitB6c8QP80&ab_channel=KatrinMiaHerrnsdorf",
+        },
+      ],
+    },
       {
           parts: [
               {
-                  text: "Doctor doom maybe",
+                text: "Dialogue from",
               },
+              {
+                text: "A Fire in the Sky",
+                link: "https://www.youtube.com/watch?v=I8C_JaT8Lvg&list=PLNrdVOgc5C74uz9JbsQnpgODDFdhjCXRH&index=386&ab_channel=TRANSTARLEXINGTON",
+            },
           ],
       },
       {
