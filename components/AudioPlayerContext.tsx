@@ -140,7 +140,7 @@ const trackLinerNotes = [{
               },
               {
                   text: "Devil Girl from Mars",
-                  link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
+                  link: "https://www.youtube.com/watch?v=yr0s1y5BwHk&ab_channel=communiTV",
                 },
             ],
         },
@@ -169,30 +169,30 @@ const trackLinerNotes = [{
             },
             {
                 text: "Allen Toussaint",
-                link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
+                link: "https://www.youtube.com/watch?v=VbOD2PdaBGE&ab_channel=getamoodon",
               },
           ],
       },
       {
           parts: [
               {
-                  text: "Interview with Lil Wayne from ",
+                  text: "Dialogue from ",
               },
               {
-                text: "Nardwaur the Subservient",
-                link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
+                text: "Nardwaur vs Lil Wayne",
+                link: "https://www.youtube.com/watch?v=wgMUhI_SN68&ab_channel=NardwuarServiette",
               },
           ],
       },
       {
-          parts: [
-              {
-                  text: "All instruments and production by ",
-              },
-              {
-                  text: "Kr1st0",
-                  link: "http://kristo-portfolio.vercel.app/",
-              },
+        parts: [
+            {
+                text: "All instruments and production by ",
+            },
+            {
+                text: "Kr1st0",
+                link: "http://kristo-portfolio.vercel.app/",
+            },
           ],
       },
     ],
@@ -208,7 +208,7 @@ const trackLinerNotes = [{
             },
             {
                 text: "Alphaville by Jean-Luc Godard",
-                link: "https://www.youtube.com/watch?v=oqAqhgsv410&ab_channel=DavieAllan%26TheArrows-Topic",
+                link: "https://www.youtube.com/watch?v=UitB6c8QP80&ab_channel=KatrinMiaHerrnsdorf",
               },
           ],
       },
