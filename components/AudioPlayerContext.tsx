@@ -131,7 +131,7 @@ const trackLinerNotes = [{
     {
       parts: [
         {
-          text: "Audre Lord reading her poem",
+          text: "Audre Lord reading her poem ",
         },
         {
           text: "A Litany for Survival",
