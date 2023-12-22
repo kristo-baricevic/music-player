@@ -209,6 +209,17 @@ const trackLinerNotes = [{
       {
         parts: [
           {
+            text: "Dialogue from the intro of ",
+          },
+          {
+            text: "Damn Right I Am Somebody by Fred Wesley",
+            link: "https://www.youtube.com/watch?v=9V9VVJBSPp8&ab_channel=TheJ.B.%27s-Topic            ",
+          },
+        ],
+      },
+      {
+        parts: [
+          {
             text: "All instruments and production by ",
           },
           {
