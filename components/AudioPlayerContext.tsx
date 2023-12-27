@@ -5,10 +5,10 @@ import { Howl, Howler } from 'howler';
 
 // Define the shape of your context state
 interface AudioContextState {
-  audioContext: AudioContext | null;
   isPlaying: boolean;
   isLoading: boolean;
   currentSongIndex: number;
+  currentSong: { [key: string]: Howl } | null; 
   trackLinerNotes: {
     id: number; 
     title: string; 
@@ -19,12 +19,9 @@ interface AudioContextState {
       }[];
     }[];
   }[];
-
   nextSong: () => void;
   prevSong: () => void;
   isMuted: boolean[];
-  buffers: AudioBuffer[];
-  gainNodes: GainNode[];
   playPauseTracks: () => void;
   toggleMuteTrack: (trackIndex: number) => void;
 };
@@ -300,11 +297,11 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
 
   const loadSong = (songIndex: number) => {
     const basePath = `/music/song${songIndex + 1}`;
-    return [
-      new Howl({ src: [`${basePath}/track1.mp3`] }),
-      new Howl({ src: [`${basePath}/track2.mp3`] }),
-      new Howl({ src: [`${basePath}/track3.mp3`] }),
-    ];
+    return {
+      track1: new Howl({ src: [`${basePath}/track1.mp3`] }),
+      track2: new Howl({ src: [`${basePath}/track2.mp3`] }),
+      track3: new Howl({ src: [`${basePath}/track3.mp3`] }),
+    };
   };
   
   const loadNewSong = (songIndex: number) => {
@@ -312,60 +309,75 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     setCurrentSong(song);
   };
 
-  const playPauseTracks = async () => {
-    if (!audioContext || buffers.length < 3) {
-      setIsLoading(true);
-      return;
-    }
-  
+  const playPauseTracks = () => {
+    if (!currentSong) return;
 
     if (isPlaying) {
       // Pause the tracks
+      Object.values(currentSong).forEach(track => track.pause());
       setIsPlaying(false);
     } 
     else {
       // Create new source nodes and connect them
-      
-      };
+      Object.values(currentSong).forEach(track => track.play());
+    };
 
-      setIsPlaying(true);
-      setIsLoading(false);
-    }
+    setIsPlaying(true);
+    setIsLoading(false);
+  }
 
   const toggleMuteTrack = (trackIndex: number) => {
+    if (!currentSong) return;
   
+    const trackKeys = Object.keys(currentSong);
+    if (trackIndex < 0 || trackIndex >= trackKeys.length) return;
+  
+    const trackKey = trackKeys[trackIndex];
+    const track = currentSong[trackKey];
+    track.mute(!track.mute());
   };
+  
 
   // Add next and previous song functions
   const nextSong = async () => {
     //stop current song
-    if (isPlaying) {
-      };
-      setIsPlaying(false);
+    if (currentSong) {
+      Object.values(currentSong).forEach(track => track.stop());
     }
-
-    const nextIndex = (currentSongIndex + 1) % 5;
-    setCurrentSongIndex(nextIndex);
-
     setIsPlaying(false);
+
+    const nextIndex = (currentSongIndex + 1) % trackLinerNotes.length;
+    setCurrentSongIndex(nextIndex);
+    loadNewSong(nextIndex);
   };
 
   const prevSong = async () => {
-    if (isPlaying) {
-    };
-
-    const prevIndex = (currentSongIndex - 1 + 5) % 5;
-    setCurrentSongIndex(prevIndex);
-
-    await loadSongBuffers(prevIndex);
+    //stop current song
+    if (currentSong) {
+      Object.values(currentSong).forEach(track => track.stop());
+    }
     setIsPlaying(false);
+
+    const prevIndex = (currentSongIndex - 1 + trackLinerNotes.length) % trackLinerNotes.length;
+    setCurrentSongIndex(prevIndex);
   };
 
   return (
-    <AudioPlayerContext.Provider value={{ isPlaying, trackLinerNotes, currentSongIndex, isLoading, nextSong, prevSong, playPauseTracks, audioContext, isMuted, buffers, gainNodes, toggleMuteTrack }}>
+    <AudioPlayerContext.Provider value={{
+      isPlaying,
+      trackLinerNotes,
+      currentSongIndex,
+      isLoading,
+      currentSong,
+      nextSong,
+      prevSong,
+      playPauseTracks,
+      toggleMuteTrack
+    }}>
       {children}
     </AudioPlayerContext.Provider>
   );
+  
 };
 
 export default AudioProvider;
