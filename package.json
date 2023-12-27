@@ -14,11 +14,13 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "canvasjs": "^1.8.3",
     "gsap": "^3.12.3",
+    "howler": "^2.2.4",
     "next": "14.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/howler": "^2.2.11",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
