@@ -1,7 +1,7 @@
 'use client'
 
-import React, { createContext, useState, useEffect, useRef, useCallback } from 'react';
-import { Howl, Howler } from 'howler';
+import React, { createContext, useState, useRef, useEffect } from 'react';
+import { Howl } from 'howler';
 
 // Define the shape of your context state
 interface AudioContextState {
@@ -286,22 +286,26 @@ export const AudioPlayerContext = createContext<AudioContextState | undefined>(u
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     
-  const [currentSong, setCurrentSong] = useState<Howl[]>([]);
+  useEffect (() => {
+    loadNewSong(0);
+  },[]);
+
+  const [currentSong, setCurrentSong] = useState<{ [key: string]: Howl } | null>(null);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isMuted, setIsMuted] = useState<boolean[]>([false, false, false]);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isLoading, setIsLoading] =useState<boolean>(false);
-  const trackSources = useRef<AudioBufferSourceNode[]>([]);
-  const startTime = useRef<number>(0);
-  const pauseTime = useRef<number>(0);
 
   const loadSong = (songIndex: number) => {
+    setIsLoading(true);
     const basePath = `/music/song${songIndex + 1}`;
-    return {
+    const newSong = {
       track1: new Howl({ src: [`${basePath}/track1.mp3`] }),
       track2: new Howl({ src: [`${basePath}/track2.mp3`] }),
       track3: new Howl({ src: [`${basePath}/track3.mp3`] }),
     };
+    setIsLoading(false);
+    return newSong;
   };
   
   const loadNewSong = (songIndex: number) => {
@@ -316,30 +320,31 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       // Pause the tracks
       Object.values(currentSong).forEach(track => track.pause());
       setIsPlaying(false);
+      setIsLoading(false);
     } 
     else {
       // Create new source nodes and connect them
       Object.values(currentSong).forEach(track => track.play());
+      setIsPlaying(true);
+      setIsLoading(false);
     };
-
-    setIsPlaying(true);
-    setIsLoading(false);
   }
 
   const toggleMuteTrack = (trackIndex: number) => {
-    if (!currentSong) return;
+    if (!currentSong || trackIndex < 0 || trackIndex >= isMuted.length) return;
   
     const trackKeys = Object.keys(currentSong);
     if (trackIndex < 0 || trackIndex >= trackKeys.length) return;
   
     const trackKey = trackKeys[trackIndex];
     const track = currentSong[trackKey];
-    track.mute(!track.mute());
+    const muteState = !track.mute();
+    track.mute(muteState);
+    setIsMuted(isMuted.map((muted, index) => index === trackIndex ? muteState: muted ));
   };
   
-
   // Add next and previous song functions
-  const nextSong = async () => {
+  const nextSong = () => {
     //stop current song
     if (currentSong) {
       Object.values(currentSong).forEach(track => track.stop());
@@ -351,7 +356,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     loadNewSong(nextIndex);
   };
 
-  const prevSong = async () => {
+  const prevSong = () => {
     //stop current song
     if (currentSong) {
       Object.values(currentSong).forEach(track => track.stop());
@@ -360,6 +365,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
 
     const prevIndex = (currentSongIndex - 1 + trackLinerNotes.length) % trackLinerNotes.length;
     setCurrentSongIndex(prevIndex);
+    loadNewSong(prevIndex);
   };
 
   return (
@@ -367,6 +373,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       isPlaying,
       trackLinerNotes,
       currentSongIndex,
+      isMuted,
       isLoading,
       currentSong,
       nextSong,
