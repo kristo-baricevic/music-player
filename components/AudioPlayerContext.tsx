@@ -1,30 +1,32 @@
 'use client'
 
 import React, { createContext, useState, useEffect, useRef, useCallback } from 'react';
+import { Howl, Howler } from 'howler';
 
 // Define the shape of your context state
 interface AudioContextState {
-    audioContext: AudioContext | null;
-    isPlaying: boolean;
-    isLoading: boolean;
-    currentSongIndex: number;
-    trackLinerNotes: {
-      id: number; 
-      title: string; 
-      samples: {
-        parts: {
-          text: string; 
-          link?: string;
-        }[];
+  audioContext: AudioContext | null;
+  isPlaying: boolean;
+  isLoading: boolean;
+  currentSongIndex: number;
+  trackLinerNotes: {
+    id: number; 
+    title: string; 
+    samples: {
+      parts: {
+        text: string; 
+        link?: string;
       }[];
     }[];
-    nextSong: () => void;
-    prevSong: () => void;
-    isMuted: boolean[];
-    buffers: AudioBuffer[];
-    gainNodes: GainNode[];
-    playPauseTracks: () => void;
-    toggleMuteTrack: (trackIndex: number) => void;
+  }[];
+
+  nextSong: () => void;
+  prevSong: () => void;
+  isMuted: boolean[];
+  buffers: AudioBuffer[];
+  gainNodes: GainNode[];
+  playPauseTracks: () => void;
+  toggleMuteTrack: (trackIndex: number) => void;
 };
 
 type AudioProviderProps = {
@@ -287,104 +289,28 @@ export const AudioPlayerContext = createContext<AudioContextState | undefined>(u
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+  const [currentSong, setCurrentSong] = useState<Howl[]>([]);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
-  const [buffers, setBuffers] = useState<AudioBuffer[]>([]);
-  const [gainNodes, setGainNodes] = useState<GainNode[]>([]);
   const [isMuted, setIsMuted] = useState<boolean[]>([false, false, false]);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isLoading, setIsLoading] =useState<boolean>(false);
   const trackSources = useRef<AudioBufferSourceNode[]>([]);
   const startTime = useRef<number>(0);
   const pauseTime = useRef<number>(0);
-    
-  // useEffect creates an instance of AudioContext
-  useEffect(() => {
-    let ac: AudioContext | null = null;
-    let usingWebAudio = true
-    
-    try {
-      if (typeof AudioContext !== 'undefined') {
-        ac = new window.AudioContext({ latencyHint: 'playback' });
-      } else if (typeof window.webkitAudioContext !== 'undefined') {
-        ac = new window.webkitAudioContext();
-      } else {
-            usingWebAudio = false;
-      }
-    } catch(e) {
-        usingWebAudio = false;
-        ac = null;
-    }
 
-    // context state is `undefined` in iOS Safari
-    if (usingWebAudio && ac && ac.state === 'suspended') {
-    const resume = function () {
-      ac?.resume();
-
-      setTimeout(function () {
-        if (ac?.state === 'running') {
-          document.body.removeEventListener('touchend', resume, false);
-        }
-      }, 0);
-    };
-    document.body.addEventListener('touchend', resume, false);
-    }
-
-    if (ac) {
-      ac.onstatechange = () => console.log(`AudioContext state: ${ac?.state}`);
-      setAudioContext(ac);
-    }
-
-    // Initialize gain nodes
-    if (ac) {
-      const gains = Array.from({ length: 3 }, () => ac!.createGain());
-      setGainNodes(gains);
-    }
-
-    return () => {};
-  }, []);
-      
-  //create buffer functions with newly returned Audio Context
-  const loadBuffer = useCallback(async (url: string) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(url);
-      const arrayBuffer = await response.arrayBuffer();
-      return await audioContext?.decodeAudioData(arrayBuffer);
-    } catch (error) {
-      console.error('Error loading audio file:', error);
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [audioContext]);
-
-  const loadSongBuffers = useCallback(async (songIndex: number) => {
+  const loadSong = (songIndex: number) => {
     const basePath = `/music/song${songIndex + 1}`;
-    const bufferPromises = [
-      loadBuffer(`${basePath}/track1.mp3`),
-      loadBuffer(`${basePath}/track2.mp3`),
-      loadBuffer(`${basePath}/track3.mp3`),
+    return [
+      new Howl({ src: [`${basePath}/track1.mp3`] }),
+      new Howl({ src: [`${basePath}/track2.mp3`] }),
+      new Howl({ src: [`${basePath}/track3.mp3`] }),
     ];
-
-    const loadedBuffers = await Promise.all(bufferPromises);
-    const validBuffers = loadedBuffers.filter((buffer): buffer is AudioBuffer => buffer !== null);
-    setBuffers(validBuffers);
-  }, [loadBuffer]);
-
-  //load initial song buffers 
-  useEffect(() => {
-    if (!audioContext) return;
+  };
   
-    loadSongBuffers(currentSongIndex);
-  }, [audioContext, loadSongBuffers, currentSongIndex]);
-  
-  useEffect(() => {
-    if (!isPlaying || !audioContext) return;
-  
-  // Load new song buffers
-  }, [currentSongIndex, isPlaying, audioContext]);
-  
+  const loadNewSong = (songIndex: number) => {
+    const song = loadSong(songIndex);
+    setCurrentSong(song);
+  };
 
   const playPauseTracks = async () => {
     if (!audioContext || buffers.length < 3) {
@@ -392,71 +318,44 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       return;
     }
   
-    if (audioContext.state === 'suspended') {
-      await audioContext.resume();
-    }
 
     if (isPlaying) {
       // Pause the tracks
-      pauseTime.current = audioContext.currentTime - startTime.current;
-      trackSources.current.forEach(source => source.disconnect());
       setIsPlaying(false);
     } 
     else {
       // Create new source nodes and connect them
-      trackSources.current = buffers.map((buffer, index) => {
-        const source = audioContext.createBufferSource();
-        source.buffer = buffer;
-        source.connect(gainNodes[index]).connect(audioContext.destination);
-        return source;
-      });
+      
+      };
 
-      // Schedule start time slightly in the future to ensure synchronization
-      const scheduleTime = audioContext.currentTime + 0.1; 
-      trackSources.current.forEach(source => {
-        source.start(scheduleTime, pauseTime.current || 0);
-      });
-  
-      startTime.current = scheduleTime;
-      pauseTime.current = 0;
       setIsPlaying(true);
       setIsLoading(false);
     }
-  }; 
 
   const toggleMuteTrack = (trackIndex: number) => {
-    const currentMuteState = isMuted[trackIndex];
-    gainNodes[trackIndex].gain.value = currentMuteState ? 1 : 0;
-    setIsMuted(isMuted.map((mute, index) => index === trackIndex ? !mute : mute));
+  
   };
 
   // Add next and previous song functions
   const nextSong = async () => {
+    //stop current song
+    if (isPlaying) {
+      };
+      setIsPlaying(false);
+    }
+
     const nextIndex = (currentSongIndex + 1) % 5;
     setCurrentSongIndex(nextIndex);
 
-    if (isPlaying) {
-      trackSources.current.forEach(source => {
-        source.stop();
-        source.disconnect();
-      });
-    setIsPlaying(false);
-    }
-
-    await loadSongBuffers(nextIndex); 
     setIsPlaying(false);
   };
 
   const prevSong = async () => {
+    if (isPlaying) {
+    };
+
     const prevIndex = (currentSongIndex - 1 + 5) % 5;
     setCurrentSongIndex(prevIndex);
-
-    if (isPlaying) {
-      trackSources.current.forEach(source => {
-        source.stop();
-        source.disconnect();
-      });
-    };
 
     await loadSongBuffers(prevIndex);
     setIsPlaying(false);
