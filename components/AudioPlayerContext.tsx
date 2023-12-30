@@ -286,6 +286,10 @@ const trackLinerNotes = [{
 export const AudioPlayerContext = createContext<AudioContextState | undefined>(undefined);
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
+    
+  useEffect (() => {
+    loadNewSong(0);
+  },[]);
 
   const [currentSong, setCurrentSong] = useState<{ [key: string]: Howl } | null>(null);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);

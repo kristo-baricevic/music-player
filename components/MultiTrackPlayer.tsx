@@ -28,10 +28,6 @@ const MultiTrackPlayer = () => {
   }
 
   const { isMuted, isLoading, isPlaying, trackLinerNotes, currentSongIndex, loadNewSong, prevSong, nextSong, playPauseTracks, toggleMuteTrack } = audio;
-
-  useEffect(() => {
-    loadNewSong(currentSongIndex);
-  }, [currentSongIndex, loadNewSong]);
   
 
   const updateProgress = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
