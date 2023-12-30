@@ -298,14 +298,17 @@ export default function Home() {
         break;
       default:
         break;
-    }}
+    }}   
+
+    loadNewSong(currentSongIndex);
+
   }, [audio?.currentSongIndex]);
 
   if (!audio) { 
     return null 
   }
 
-  const { currentSongIndex } = audio;
+  const { currentSongIndex, loadNewSong } = audio;
 
 
   return (

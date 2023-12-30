@@ -12,10 +12,6 @@ declare global {
 const MultiTrackPlayer = () => {
   const audio = useContext(AudioPlayerContext);
 
-  useEffect(() => {
-    // setAudio(new (window.AudioContext || window.webkitAudioContext)());
-  }, []);
-
   const musicContainerRef = useRef<HTMLDivElement>(null);
   const playBtnRef = useRef<HTMLButtonElement>(null);
   const prevBtnRef = useRef<HTMLButtonElement>(null);
@@ -31,7 +27,12 @@ const MultiTrackPlayer = () => {
     return null;
   }
 
-  const { isMuted, isLoading, isPlaying, trackLinerNotes, currentSongIndex, prevSong, nextSong, playPauseTracks, toggleMuteTrack } = audio;
+  const { isMuted, isLoading, isPlaying, trackLinerNotes, currentSongIndex, loadNewSong, prevSong, nextSong, playPauseTracks, toggleMuteTrack } = audio;
+
+  useEffect(() => {
+    loadNewSong(currentSongIndex);
+  }, [currentSongIndex, loadNewSong]);
+  
 
   const updateProgress = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
     // if (!audioContext || !trackSources.current.length) return;

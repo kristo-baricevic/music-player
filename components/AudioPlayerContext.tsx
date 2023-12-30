@@ -22,6 +22,7 @@ interface AudioContextState {
   nextSong: () => void;
   prevSong: () => void;
   isMuted: boolean[];
+  loadNewSong: (songIndex: number) => void;
   playPauseTracks: () => void;
   toggleMuteTrack: (trackIndex: number) => void;
 };
@@ -285,10 +286,6 @@ const trackLinerNotes = [{
 export const AudioPlayerContext = createContext<AudioContextState | undefined>(undefined);
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
-    
-  useEffect (() => {
-    loadNewSong(0);
-  },[]);
 
   const [currentSong, setCurrentSong] = useState<{ [key: string]: Howl } | null>(null);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
@@ -320,7 +317,6 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       // Pause the tracks
       Object.values(currentSong).forEach(track => track.pause());
       setIsPlaying(false);
-      setIsLoading(false);
     } 
     else {
       // Create new source nodes and connect them
@@ -328,7 +324,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       setIsPlaying(true);
       setIsLoading(false);
     };
-  }
+  };
 
   const toggleMuteTrack = (trackIndex: number) => {
     if (!currentSong || trackIndex < 0 || trackIndex >= isMuted.length) return;
@@ -376,6 +372,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       isMuted,
       isLoading,
       currentSong,
+      loadNewSong,
       nextSong,
       prevSong,
       playPauseTracks,
