@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useCallback, useEffect } from 'react';
 import { Howl } from 'howler';
 
 // Define the shape of your context state
@@ -8,6 +8,7 @@ interface AudioContextState {
   isPlaying: boolean;
   isLoading: boolean;
   currentSongIndex: number;
+  progress: number;
   currentSong: { [key: string]: Howl } | null; 
   trackLinerNotes: {
     id: number; 
@@ -316,6 +317,9 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
  
   const isLoading = Object.values(trackLoadingStatus).some(status => status);
 
+  const [volume, setVolume] = useState(1);
+  const [progress, setProgress] = useState(0); 
+
 
   const loadSong = useCallback((songIndex: number) => {
     setTrackLoadingStatus({ track1: true, track2: true, track3: true });
@@ -354,7 +358,6 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     });
   }, [currentTrack.isMuted.length, currentTrack.song]);
   
-  
   // Add next and previous song functions
   const nextSong = useCallback(() => {
     //stop current song
@@ -386,6 +389,36 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     }));
   }, [currentTrack, loadSong]);
 
+  const changeVolume = useCallback((newVolume: number) => {
+    setVolume(newVolume);
+    if (currentTrack.song) {
+      Object.values(currentTrack.song).forEach(track => track.volume(newVolume));
+    }
+  }, [currentTrack.song]);
+
+  useEffect(() => {
+    let animationFrameId: number;
+
+    const updateProgress = () => {
+      if (currentTrack.song && currentTrack.isPlaying) {
+        const primaryTrack = currentTrack.song['track1'];
+        const progress = (primaryTrack.seek() / primaryTrack.duration()) * 100;
+
+        setProgress(progress);
+        animationFrameId = requestAnimationFrame(updateProgress);
+      }
+    };
+
+    if (currentTrack.isPlaying) {
+      animationFrameId = requestAnimationFrame(updateProgress);
+    }
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  
+  })
+
   return (
     <AudioPlayerContext.Provider value={{
       isPlaying: currentTrack.isPlaying,
@@ -393,6 +426,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       currentSongIndex: currentTrack.index,
       isMuted: currentTrack.isMuted,
       isLoading,
+      progress,
       currentSong: currentTrack.song,
       loadNewSong: loadSong,
       nextSong,

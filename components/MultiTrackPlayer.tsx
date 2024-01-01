@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useRef } from 'react';
 import { AudioPlayerContext } from './AudioPlayerContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -27,18 +27,8 @@ const MultiTrackPlayer = () => {
     return null;
   }
 
-  const { isMuted, isLoading, isPlaying, trackLinerNotes, currentSongIndex, loadNewSong, prevSong, nextSong, playPauseTracks, toggleMuteTrack } = audio;
+  const { isMuted, isLoading, isPlaying, trackLinerNotes, currentSongIndex, loadNewSong, progress, prevSong, nextSong, playPauseTracks, toggleMuteTrack } = audio;
   
-
-  const updateProgress = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
-    // if (!audioContext || !trackSources.current.length) return;
-
-    // const currentTime = audioContext.currentTime - startTime.current;
-
-    // const progressPercent = (currentTime / duration) * 100;
-    // if (progressRef.current) progressRef.current.style.width = `${progressPercent}%`;
-  };
-
   const setProgress = (e: React.MouseEvent<HTMLDivElement>) => {
     const width = progressContainerRef.current?.clientWidth || 0;
     const clickX = e.nativeEvent.offsetX;
@@ -72,7 +62,7 @@ const MultiTrackPlayer = () => {
           <div className="flex flex-col px-2">
               <h4 className="flex" ref={titleRef}>{trackLinerNotes[currentSongIndex].title}</h4>
               <div className="progress-container flex" ref={progressContainerRef} onClick={setProgress}>
-                  <div className="progress" ref={progressRef}></div>
+                  <div className="progress" ref={progressRef} style={{ width: `${progress}%` }}></div>
               </div>
           </div>
         </div>
