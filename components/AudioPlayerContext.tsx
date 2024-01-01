@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useState, useRef, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { Howl } from 'howler';
 
 // Define the shape of your context state
@@ -30,6 +30,21 @@ interface AudioContextState {
 type AudioProviderProps = {
     children: React.ReactNode;
   };
+
+interface Track {
+  [key: string]: Howl;
+}
+
+interface CurrentTrackState {
+  song: Track | null;
+  index: number;
+  isPlaying: boolean;
+  isMuted: boolean[];
+}
+
+interface TrackLoadingStatus {
+  [key: string]: boolean;
+}
 
 const trackLinerNotes = [{
   id: 1,
@@ -286,97 +301,100 @@ const trackLinerNotes = [{
 export const AudioPlayerContext = createContext<AudioContextState | undefined>(undefined);
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
-    
-  useEffect (() => {
-    loadNewSong(0);
-  },[]);
+  const [currentTrack, setCurrentTrack] = useState<CurrentTrackState>({
+    song: null,
+    index: 0,
+    isPlaying: false,
+    isMuted: [false, false, false]
+  });
 
-  const [currentSong, setCurrentSong] = useState<{ [key: string]: Howl } | null>(null);
-  const [currentSongIndex, setCurrentSongIndex] = useState(0);
-  const [isMuted, setIsMuted] = useState<boolean[]>([false, false, false]);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [isLoading, setIsLoading] =useState<boolean>(false);
+  const [trackLoadingStatus, setTrackLoadingStatus] = useState<TrackLoadingStatus>({
+    track1: false,
+    track2: false,
+    track3: false
+  });
+ 
+  const isLoading = Object.values(trackLoadingStatus).some(status => status);
 
-  const loadSong = (songIndex: number) => {
-    setIsLoading(true);
+
+  const loadSong = useCallback((songIndex: number) => {
+    setTrackLoadingStatus({ track1: true, track2: true, track3: true });
     const basePath = `/music/song${songIndex + 1}`;
     const newSong = {
-      track1: new Howl({ src: [`${basePath}/track1.mp3`] }),
-      track2: new Howl({ src: [`${basePath}/track2.mp3`] }),
-      track3: new Howl({ src: [`${basePath}/track3.mp3`] }),
+      track1: new Howl({ src: [`${basePath}/track1.mp3`], onload: () => setTrackLoadingStatus(prev => ({ ...prev, track1: false })) }),
+      track2: new Howl({ src: [`${basePath}/track2.mp3`], onload: () => setTrackLoadingStatus(prev => ({ ...prev, track2: false })) }),
+      track3: new Howl({ src: [`${basePath}/track3.mp3`], onload: () => setTrackLoadingStatus(prev => ({ ...prev, track3: false })) }),
     };
-    setIsLoading(false);
-    return newSong;
-  };
-  
-  const loadNewSong = (songIndex: number) => {
-    const song = loadSong(songIndex);
-    setCurrentSong(song);
-  };
+    setCurrentTrack(prev => ({ ...prev, song: newSong, index: songIndex }));
+  }, []);
 
-  const playPauseTracks = () => {
-    if (!currentSong) return;
+  const playPauseTracks = useCallback(() => {
+    if (!currentTrack.song) return;
 
-    if (isPlaying) {
-      // Pause the tracks
-      Object.values(currentSong).forEach(track => track.pause());
-      setIsPlaying(false);
-    } 
-    else {
-      // Create new source nodes and connect them
-      Object.values(currentSong).forEach(track => track.play());
-      setIsPlaying(true);
-      setIsLoading(false);
-    };
-  };
+    setCurrentTrack(prev => {
+      const isPlaying = !prev.isPlaying;
+      if (prev.song) {
+        Object.values(prev.song).forEach(track => isPlaying ? track.play() : track.pause());
+      }
+      return { ...prev, isPlaying };
+    });
+  }, [currentTrack.song]);
 
-  const toggleMuteTrack = (trackIndex: number) => {
-    if (!currentSong || trackIndex < 0 || trackIndex >= isMuted.length) return;
+  const toggleMuteTrack = useCallback((trackIndex: number) => {
+    if (!currentTrack.song || trackIndex < 0 || trackIndex >= currentTrack.isMuted.length) return;
+
+    setCurrentTrack(prev => {
+      const newMuted = [...prev.isMuted];
+      newMuted[trackIndex] = !newMuted[trackIndex];
+      if (prev.song){
+        const trackKeys = Object.keys(prev.song);
+        prev.song[trackKeys[trackIndex]].mute(newMuted[trackIndex]);
+      }
+      return { ...prev, isMuted: newMuted };
+    });
+  }, [currentTrack.isMuted.length, currentTrack.song]);
   
-    const trackKeys = Object.keys(currentSong);
-    if (trackIndex < 0 || trackIndex >= trackKeys.length) return;
-  
-    const trackKey = trackKeys[trackIndex];
-    const track = currentSong[trackKey];
-    const muteState = !track.mute();
-    track.mute(muteState);
-    setIsMuted(isMuted.map((muted, index) => index === trackIndex ? muteState: muted ));
-  };
   
   // Add next and previous song functions
-  const nextSong = () => {
+  const nextSong = useCallback(() => {
     //stop current song
-    if (currentSong) {
-      Object.values(currentSong).forEach(track => track.stop());
+    if (currentTrack.song) {
+      Object.values(currentTrack.song).forEach(track => track.stop());
     }
-    setIsPlaying(false);
+    
+    const nextIndex = (currentTrack.index + 1) % trackLinerNotes.length;
+    loadSong(nextIndex);
+    setCurrentTrack(prev => ({
+      ...prev,
+      index: nextIndex,
+      isPlaying: false
+    }));
+  }, [currentTrack, loadSong]);
 
-    const nextIndex = (currentSongIndex + 1) % trackLinerNotes.length;
-    setCurrentSongIndex(nextIndex);
-    loadNewSong(nextIndex);
-  };
-
-  const prevSong = () => {
+  const prevSong = useCallback(() => {
     //stop current song
-    if (currentSong) {
-      Object.values(currentSong).forEach(track => track.stop());
+    if (currentTrack.song) {
+      Object.values(currentTrack.song).forEach(track => track.stop());
     }
-    setIsPlaying(false);
 
-    const prevIndex = (currentSongIndex - 1 + trackLinerNotes.length) % trackLinerNotes.length;
-    setCurrentSongIndex(prevIndex);
-    loadNewSong(prevIndex);
-  };
+    const prevIndex = (currentTrack.index - 1 + trackLinerNotes.length) % trackLinerNotes.length;
+    loadSong(prevIndex);
+    setCurrentTrack(prev => ({
+      ...prev,
+      index: prevIndex,
+      isPlaying: false
+    }));
+  }, [currentTrack, loadSong]);
 
   return (
     <AudioPlayerContext.Provider value={{
-      isPlaying,
+      isPlaying: currentTrack.isPlaying,
       trackLinerNotes,
-      currentSongIndex,
-      isMuted,
+      currentSongIndex: currentTrack.index,
+      isMuted: currentTrack.isMuted,
       isLoading,
-      currentSong,
-      loadNewSong,
+      currentSong: currentTrack.song,
+      loadNewSong: loadSong,
       nextSong,
       prevSong,
       playPauseTracks,
