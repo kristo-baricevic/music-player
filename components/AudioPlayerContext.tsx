@@ -1,7 +1,9 @@
 'use client'
 
 import React, { createContext, useState, useCallback, useEffect } from 'react';
-import { Howl } from 'howler';
+import { Howl } from 'howler-with-buffer';
+import { analyzeWav } from '@/app/analyzeWav';
+import { getBpm } from '@/app/getBpm';
 
 // Define the shape of your context state
 interface AudioContextState {
@@ -9,6 +11,9 @@ interface AudioContextState {
   isLoading: boolean;
   currentSongIndex: number;
   progress: number;
+  bpm: number | null,
+  analysisData1: number,
+  analysisData2: number,
   currentSong: { [key: string]: Howl } | null; 
   trackLinerNotes: {
     id: number; 
@@ -29,8 +34,8 @@ interface AudioContextState {
 };
 
 type AudioProviderProps = {
-    children: React.ReactNode;
-  };
+  children: React.ReactNode;
+};
 
 interface Track {
   [key: string]: Howl;
@@ -302,6 +307,10 @@ const trackLinerNotes = [{
 export const AudioPlayerContext = createContext<AudioContextState | undefined>(undefined);
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
+  const [analysisData1, setAnalysisData1] = useState<number>(0);
+  const [analysisData2, setAnalysisData2] = useState<number>(1);
+  const [bpm, setBpm] = useState(120);
+
   const [currentTrack, setCurrentTrack] = useState<CurrentTrackState>({
     song: null,
     index: 0,
@@ -320,7 +329,6 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   const [volume, setVolume] = useState(1);
   const [progress, setProgress] = useState(0); 
 
-
   const loadSong = useCallback((songIndex: number) => {
     setTrackLoadingStatus({ track1: true, track2: true, track3: true });
     const basePath = `/music/song${songIndex + 1}`;
@@ -331,6 +339,45 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     };
     setCurrentTrack(prev => ({ ...prev, song: newSong, index: songIndex }));
   }, []);
+
+  useEffect(() => {
+    // Function to perform analysis on the current track
+    const analyzeCurrentTrack = async () => {
+
+      const buffer3 = getBuffer('track3');
+
+      try {
+        const bpm = await getBpm(buffer3);
+       
+
+        if (!bpm || !analysisData1 || !analysisData2) {
+          return;
+        }
+        console.log(bpm);
+        console.log(analysisData1);
+        console.log(analysisData2);
+
+        setAnalysisData1(analysisData1);
+        setAnalysisData2(analysisData2);
+      } catch (error) {
+        console.error('Error during track analysis:', error);
+      }
+    };
+
+    if (currentTrack.song) {
+      analyzeCurrentTrack();
+    }
+  }, [currentTrack.song]);
+
+  const getBuffer = (trackName: string): AudioBuffer | null => {
+    const track = currentTrack.song ? currentTrack.song[trackName] : null;
+
+    if (track && typeof (track as any).getBuffer === 'function') {
+      return (track as any).getBuffer();
+    } else {
+      return null;
+    }
+  }
 
   const playPauseTracks = useCallback(() => {
     if (!currentTrack.song) return;
@@ -363,7 +410,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     //stop current song
     if (currentTrack.song) {
       Object.values(currentTrack.song).forEach(track => track.stop());
-    }
+    };
     
     const nextIndex = (currentTrack.index + 1) % trackLinerNotes.length;
     loadSong(nextIndex);
@@ -427,6 +474,9 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       isMuted: currentTrack.isMuted,
       isLoading,
       progress,
+      bpm,
+      analysisData1,
+      analysisData2,
       currentSong: currentTrack.song,
       loadNewSong: loadSong,
       nextSong,

@@ -1,5 +1,6 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { AudioPlayerContext } from './AudioPlayerContext';
+import { animationForSong } from '@/app/animations';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,6 +12,17 @@ declare global {
 
 const MultiTrackPlayer = () => {
   const audio = useContext(AudioPlayerContext);
+
+  useEffect(() => {
+    if (audio) {
+      const { currentSongIndex } = audio;
+    };
+
+    loadNewSong(currentSongIndex);
+
+    animationForSong(bpm, analysisData1, analysisData2);
+
+  }, [audio?.currentSongIndex]);
 
   const musicContainerRef = useRef<HTMLDivElement>(null);
   const playBtnRef = useRef<HTMLButtonElement>(null);
@@ -27,8 +39,8 @@ const MultiTrackPlayer = () => {
     return null;
   }
 
-  const { isMuted, isLoading, isPlaying, trackLinerNotes, currentSongIndex, loadNewSong, progress, prevSong, nextSong, playPauseTracks, toggleMuteTrack } = audio;
-  
+  const { isMuted, isLoading, isPlaying, trackLinerNotes, currentSongIndex, bpm, analysisData1, analysisData2, loadNewSong, progress, prevSong, nextSong, playPauseTracks, toggleMuteTrack } = audio;
+
   const setProgress = (e: React.MouseEvent<HTMLDivElement>) => {
     const width = progressContainerRef.current?.clientWidth || 0;
     const clickX = e.nativeEvent.offsetX;
