@@ -2,10 +2,10 @@
 
 import Image from 'next/image'
 import { useEffect, useContext } from 'react';
-import { animationForSong, clearAnimations  } from '../animations';
-import MultiTrackPlayer from '@/components/MultiTrackPlayer';
-import LinerNotes from '@/components/LinerNotes';
-import { AudioPlayerContext } from '@/components/AudioPlayerContext';
+import { animationForSong, clearAnimations  } from './animations';
+import MultiTrackPlayer from '@/app/src/components/MultiTrackPlayer';
+import LinerNotes from '@/app/src/components/LinerNotes';
+import { AudioPlayerContext } from '@/app/src/components/AudioPlayerContext';
 
 export default function Home() {
 
