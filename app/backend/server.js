@@ -1,15 +1,23 @@
 const express = require('express');
+
 const app = express();
+
 const port = 3000;
 
 app.use(express.json()); 
 
+app.use(cors({
+    origin: 'http://localhost:3000',
+}));
+
+app.use('/static', express.static('storage'));
+
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+    res.send('Hello World!');
 });
 
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+    console.log(`Server running on http://localhost:${port}`);
 });
 
 app.get('/api/songs', (req, res) => {
