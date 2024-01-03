@@ -2,7 +2,6 @@
 
 import React, { createContext, useState, useCallback, useEffect } from 'react';
 import { Howl } from 'howler-with-buffer';
-import { analyzeWav } from '@/app/src/analyzeWav';
 import { getBpm } from '../getBpm';
 
 // Define the shape of your context state
