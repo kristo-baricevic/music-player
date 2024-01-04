@@ -4,4 +4,3 @@ export const TOGGLE_MUTE_TRACK = 'TOGGLE_MUTE_TRACK';
 export const NEXT_SONG = 'NEXT_SONG';
 export const PREV_SONG = 'PREV_SONG';
 export const SET_VOLUME = 'SET_VOLUME';
-// Add other action types as needed

@@ -1,8 +1,10 @@
 'use client'
 
 import React, { createContext, useState, useCallback, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Howl } from 'howler-with-buffer';
 import { getBpm } from '../getBpm';
+import { loadSong, playPauseSong, nextSong, prevSong } from '../redux/actions';
 
 // Define the shape of your context state
 interface AudioContextState {
@@ -306,16 +308,13 @@ const trackLinerNotes = [{
 export const AudioPlayerContext = createContext<AudioContextState | undefined>(undefined);
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
+  const dispatch = useDispatch();
+  const { currentSongIndex, toggleMuteTrack, nextSong, prevSong, trackIndex, isPlaying, isMuted, trackLinerNotes } = useSelector(state => state.audio);
+  const [ currentTrack, setCurrentTrack ] = useState<CurrentTrackState>({ song: null, index: 0, isPlaying: false, isMuted: [false, false, false] });
+
   const [analysisData1, setAnalysisData1] = useState<number>(0);
   const [analysisData2, setAnalysisData2] = useState<number>(1);
   const [bpm, setBpm] = useState(120);
-
-  const [currentTrack, setCurrentTrack] = useState<CurrentTrackState>({
-    song: null,
-    index: 0,
-    isPlaying: false,
-    isMuted: [false, false, false]
-  });
 
   const [trackLoadingStatus, setTrackLoadingStatus] = useState<TrackLoadingStatus>({
     track1: false,
@@ -323,166 +322,127 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     track3: false
   });
  
-  const isLoading = Object.values(trackLoadingStatus).some(status => status);
-
-  const [volume, setVolume] = useState(1);
   const [progress, setProgress] = useState(0); 
 
-  const loadSong = useCallback((songIndex: number) => {
-    setTrackLoadingStatus({ track1: true, track2: true, track3: true });
-    const basePath = `/music/song${songIndex + 1}`;
-    const newSong = {
-      track1: new Howl({ src: [`${basePath}/track1.mp3`], onload: () => setTrackLoadingStatus(prev => ({ ...prev, track1: false })) }),
-      track2: new Howl({ src: [`${basePath}/track2.mp3`], onload: () => setTrackLoadingStatus(prev => ({ ...prev, track2: false })) }),
-      track3: new Howl({ src: [`${basePath}/track3.mp3`], onload: () => setTrackLoadingStatus(prev => ({ ...prev, track3: false })) }),
-    };
-    setCurrentTrack(prev => ({ ...prev, song: newSong, index: songIndex }));
-  }, []);
-
   useEffect(() => {
-    // Function to perform analysis on the current track
-    const analyzeCurrentTrack = async () => {
+    setTrackLoadingStatus({ track1: true, track2: true, track3: true });
 
-      const buffer3 = getBuffer('track3');
+    const basePath = `/music/song${currentSongIndex + 1}`;
+    const newSong: Track = {
+      track1: new Howl({
+        src: [`${basePath}/track1.mp3`],
+        onload: () => setTrackLoadingStatus(prev => ({ ...prev, track1: false }))
+      }),
+      track2: new Howl({
+        src: [`${basePath}/track2.mp3`],
+        onload: () => setTrackLoadingStatus(prev => ({ ...prev, track2: false }))
+      }),
+      track3: new Howl({
+        src: [`${basePath}/track3.mp3`],
+        onload: () => setTrackLoadingStatus(prev => ({ ...prev, track3: false }))
+      }),
+    };
 
-      try {
-        const bpm = await getBpm(buffer3);
+    setCurrentTrack({ ...currentTrack, song: newSong, index: currentSongIndex });
+
+    // Cleanup function
+    return () => {
+      newSong.track1.unload();
+      newSong.track2.unload();
+      newSong.track3.unload();
+    };
+  }, [currentSongIndex, dispatch]);
+
+  //useEffect to analyze song data in order to extract numerical data that generates values for animation variables
+  // useEffect(() => {
+  //   // Function to perform analysis on the current track
+  //   const analyzeCurrentTrack = async () => {
+
+  //     const buffer3 = getBuffer('track3');
+
+  //     try {
+  //       const bpm = await getBpm(buffer3);
        
 
-        if (!bpm || !analysisData1 || !analysisData2) {
-          return;
-        }
-        console.log(bpm);
-        console.log(analysisData1);
-        console.log(analysisData2);
+  //       if (!bpm || !analysisData1 || !analysisData2) {
+  //         return;
+  //       }
+  //       console.log(bpm);
+  //       console.log(analysisData1);
+  //       console.log(analysisData2);
 
-        setAnalysisData1(analysisData1);
-        setAnalysisData2(analysisData2);
-      } catch (error) {
-        console.error('Error during track analysis:', error);
-      }
-    };
+  //       setAnalysisData1(analysisData1);
+  //       setAnalysisData2(analysisData2);
+  //     } catch (error) {
+  //       console.error('Error during track analysis:', error);
+  //     }
+  //   };
 
-    if (currentTrack.song) {
-      analyzeCurrentTrack();
-    }
-  }, [currentTrack.song]);
+  //   if (currentTrack.song) {
+  //     analyzeCurrentTrack();
+  //   }
+  // }, [currentTrack.song]);
 
-  const getBuffer = (trackName: string): AudioBuffer | null => {
-    const track = currentTrack.song ? currentTrack.song[trackName] : null;
 
-    if (track && typeof (track as any).getBuffer === 'function') {
-      return (track as any).getBuffer();
-    } else {
-      return null;
-    }
-  }
+const handlePlayPauseTracks = () => {
+  dispatch(playPauseSong());
 
-  const playPauseTracks = useCallback(() => {
-    if (!currentTrack.song) return;
+};
 
-    setCurrentTrack(prev => {
-      const isPlaying = !prev.isPlaying;
-      if (prev.song) {
-        Object.values(prev.song).forEach(track => isPlaying ? track.play() : track.pause());
-      }
-      return { ...prev, isPlaying };
-    });
-  }, [currentTrack.song]);
+const handleMuteTrack = () => {
+  dispatch(toggleMuteTrack(trackIndex));
+};
 
-  const toggleMuteTrack = useCallback((trackIndex: number) => {
-    if (!currentTrack.song || trackIndex < 0 || trackIndex >= currentTrack.isMuted.length) return;
+const handleNextSong = () => {
+  dispatch(nextSong());
+};
 
-    setCurrentTrack(prev => {
-      const newMuted = [...prev.isMuted];
-      newMuted[trackIndex] = !newMuted[trackIndex];
-      if (prev.song){
-        const trackKeys = Object.keys(prev.song);
-        prev.song[trackKeys[trackIndex]].mute(newMuted[trackIndex]);
-      }
-      return { ...prev, isMuted: newMuted };
-    });
-  }, [currentTrack.isMuted.length, currentTrack.song]);
-  
-  // Add next and previous song functions
-  const nextSong = useCallback(() => {
-    //stop current song
-    if (currentTrack.song) {
-      Object.values(currentTrack.song).forEach(track => track.stop());
-    };
-    
-    const nextIndex = (currentTrack.index + 1) % trackLinerNotes.length;
-    loadSong(nextIndex);
-    setCurrentTrack(prev => ({
-      ...prev,
-      index: nextIndex,
-      isPlaying: false
-    }));
-  }, [currentTrack, loadSong]);
+const handlePrevSong = () => {
+  dispatch(prevSong());
+};
 
-  const prevSong = useCallback(() => {
-    //stop current song
-    if (currentTrack.song) {
-      Object.values(currentTrack.song).forEach(track => track.stop());
-    }
+const handleChangeVolume = () => {
+  dispatch(setVolume(volume));
+};
 
-    const prevIndex = (currentTrack.index - 1 + trackLinerNotes.length) % trackLinerNotes.length;
-    loadSong(prevIndex);
-    setCurrentTrack(prev => ({
-      ...prev,
-      index: prevIndex,
-      isPlaying: false
-    }));
-  }, [currentTrack, loadSong]);
 
-  const changeVolume = useCallback((newVolume: number) => {
-    setVolume(newVolume);
-    if (currentTrack.song) {
-      Object.values(currentTrack.song).forEach(track => track.volume(newVolume));
-    }
-  }, [currentTrack.song]);
+//load animations
+useEffect(() => {
+  let animationFrameId: number;
 
-  useEffect(() => {
-    let animationFrameId: number;
+  const updateProgress = () => {
+    if (currentTrack.song && currentTrack.isPlaying) {
+      const primaryTrack = currentTrack.song['track1'];
+      const progress = (primaryTrack.seek() / primaryTrack.duration()) * 100;
 
-    const updateProgress = () => {
-      if (currentTrack.song && currentTrack.isPlaying) {
-        const primaryTrack = currentTrack.song['track1'];
-        const progress = (primaryTrack.seek() / primaryTrack.duration()) * 100;
-
-        setProgress(progress);
-        animationFrameId = requestAnimationFrame(updateProgress);
-      }
-    };
-
-    if (currentTrack.isPlaying) {
+      setProgress(progress);
       animationFrameId = requestAnimationFrame(updateProgress);
     }
+  };
 
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  
-  })
+  if (currentTrack.isPlaying) {
+    animationFrameId = requestAnimationFrame(updateProgress);
+  }
+
+  return () => {
+    cancelAnimationFrame(animationFrameId);
+  };
+
+})
+
+const contextActions = {
+  loadNewSong: (index) => dispatch(loadSong(index)),
+  playPauseTracks: handlePlayPauseTracks,
+  nextTrack: handleNextSong,
+  prevTrack: handlePrevSong,
+  changeVolume: handleChangeVolume,
+  // ... other actions
+};
 
   return (
-    <AudioPlayerContext.Provider value={{
-      isPlaying: currentTrack.isPlaying,
-      trackLinerNotes,
-      currentSongIndex: currentTrack.index,
-      isMuted: currentTrack.isMuted,
-      isLoading,
-      progress,
-      bpm,
-      analysisData1,
-      analysisData2,
-      currentSong: currentTrack.song,
-      loadNewSong: loadSong,
-      nextSong,
-      prevSong,
-      playPauseTracks,
-      toggleMuteTrack
-    }}>
+    <AudioPlayerContext.Provider value={
+      contextActions
+    }>
       {children}
     </AudioPlayerContext.Provider>
   );
