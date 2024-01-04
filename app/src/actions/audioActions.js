@@ -1,4 +1,3 @@
-// audioActions.js
 import * as actionTypes from './audioActionTypes';
 
 export const playPauseTracks = () => ({
@@ -27,5 +26,3 @@ export const setVolume = (volume) => ({
   type: actionTypes.SET_VOLUME,
   payload: volume,
 });
-
-// Add other action creators as needed

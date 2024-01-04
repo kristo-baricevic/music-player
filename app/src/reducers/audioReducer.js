@@ -1,4 +1,3 @@
-// audioReducer.js
 import * as actionTypes from './audioActionTypes';
 
 export const audioReducer = (state, action) => {

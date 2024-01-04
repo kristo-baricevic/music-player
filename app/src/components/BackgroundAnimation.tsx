@@ -11,13 +11,13 @@ const BackgroundAnimation: React.FC<BackgroundAnimationProps> = () => {
 
     gsap.fromTo(".ball", 
         {
-            y: -180,
+          y: -180,
         },
         { 
-            rotate: 360,
-            y: 360,
-            delay: 3,
-            duration: 2 
+          rotate: 360,
+          y: 360,
+          delay: 3,
+          duration: 2 
         }
     );
   }, []);
