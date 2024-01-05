@@ -1,8 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faPause, faForward, faBackward } from '@fortawesome/free-solid-svg-icons';
-
-
+import React, { useEffect, useRef, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlay,
+  faPause,
+  faForward,
+  faBackward,
+} from "@fortawesome/free-solid-svg-icons";
 
 type MediaPlayerProps = {};
 
@@ -21,7 +24,7 @@ const MusicPlayer: React.FC<MediaPlayerProps> = () => {
   const coverRef = useRef<HTMLImageElement>(null);
 
   // Song titles
-  const songs = ['Angels, Gurus and Advertising'];
+  const songs = ["Angels, Gurus and Advertising"];
 
   // Keep track of song
   let songIndex = 0;
@@ -34,13 +37,15 @@ const MusicPlayer: React.FC<MediaPlayerProps> = () => {
 
   const playSong = () => {
     setIsPlaying(true);
-    if (musicContainerRef.current) musicContainerRef.current.classList.add('play');
+    if (musicContainerRef.current)
+      musicContainerRef.current.classList.add("play");
     if (audioRef.current) audioRef.current.play();
   };
 
   const pauseSong = () => {
     setIsPlaying(false);
-    if (musicContainerRef.current) musicContainerRef.current.classList.remove('play');
+    if (musicContainerRef.current)
+      musicContainerRef.current.classList.remove("play");
     if (audioRef.current) audioRef.current.pause();
   };
 
@@ -59,55 +64,78 @@ const MusicPlayer: React.FC<MediaPlayerProps> = () => {
   const updateProgress = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
     const { duration, currentTime } = e.currentTarget;
     const progressPercent = (currentTime / duration) * 100;
-    if (progressRef.current) progressRef.current.style.width = `${progressPercent}%`;
+    if (progressRef.current)
+      progressRef.current.style.width = `${progressPercent}%`;
   };
 
   const setProgress = (e: React.MouseEvent<HTMLDivElement>) => {
     const width = progressContainerRef.current?.clientWidth || 0;
     const clickX = e.nativeEvent.offsetX;
     const duration = audioRef.current?.duration || 0;
-    if (audioRef.current) audioRef.current.currentTime = (clickX / width) * duration;
+    if (audioRef.current)
+      audioRef.current.currentTime = (clickX / width) * duration;
   };
 
   useEffect(() => {
-    if (prevBtnRef.current) prevBtnRef.current.addEventListener('click', prevSong);
-    if (nextBtnRef.current) nextBtnRef.current.addEventListener('click', nextSong);
+    if (prevBtnRef.current)
+      prevBtnRef.current.addEventListener("click", prevSong);
+    if (nextBtnRef.current)
+      nextBtnRef.current.addEventListener("click", nextSong);
 
     return () => {
-
       // Cleanup event listeners when component unmounts
-      if (prevBtnRef.current) prevBtnRef.current.removeEventListener('click', prevSong);
-      if (nextBtnRef.current) nextBtnRef.current.removeEventListener('click', nextSong);
+      if (prevBtnRef.current)
+        prevBtnRef.current.removeEventListener("click", prevSong);
+      if (nextBtnRef.current)
+        nextBtnRef.current.removeEventListener("click", nextSong);
     };
   }, [prevBtnRef, nextBtnRef]);
 
   return (
-    <div ref={musicContainerRef} className="music-container" id="music-container">
+    <div
+      ref={musicContainerRef}
+      className="music-container"
+      id="music-container"
+    >
       <div className="music-info">
-            <img className="cover-image" src="images/cover.png" />
-            <div className="flex flex-col px-2">
-                <h4 className="flex" ref={titleRef}>Angels, Gurus and Advertising</h4>
-                <div className="progress-container flex" ref={progressContainerRef} onClick={setProgress}>
-                    <div className="progress" ref={progressRef}></div>
-                </div>
-            </div>
+        <img className="cover-image" src="images/cover.png" />
+        <div className="flex flex-col px-2">
+          <h4 className="flex" ref={titleRef}>
+            Angels, Gurus and Advertising
+          </h4>
+          <div
+            className="progress-container flex"
+            ref={progressContainerRef}
+            onClick={setProgress}
+          >
+            <div className="progress" ref={progressRef}></div>
+          </div>
+        </div>
       </div>
-      <audio ref={audioRef} src="music/Angels, Gurus and Advertising.mp3" id="audio" onTimeUpdate={updateProgress}></audio>
+      <audio
+        ref={audioRef}
+        src="music/Angels, Gurus and Advertising.mp3"
+        id="audio"
+        onTimeUpdate={updateProgress}
+      ></audio>
       <div className="container-background">
         <div className="navigation">
-            <button ref={prevBtnRef} className="action-btn" onClick={prevSong}>
-                <FontAwesomeIcon icon={faBackward} />
-            </button>
-            <button ref={playBtnRef} className="action-btn action-btn-big" onClick={isPlaying ? pauseSong : playSong}>
-                <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
-            </button>
-            <button ref={nextBtnRef} className="action-btn" onClick={nextSong}>
-                <FontAwesomeIcon icon={faForward} />
-            </button>
+          <button ref={prevBtnRef} className="action-btn" onClick={prevSong}>
+            <FontAwesomeIcon icon={faBackward} />
+          </button>
+          <button
+            ref={playBtnRef}
+            className="action-btn action-btn-big"
+            onClick={isPlaying ? pauseSong : playSong}
+          >
+            <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
+          </button>
+          <button ref={nextBtnRef} className="action-btn" onClick={nextSong}>
+            <FontAwesomeIcon icon={faForward} />
+          </button>
         </div>
+      </div>
     </div>
-    </div>
-  
   );
 };
 

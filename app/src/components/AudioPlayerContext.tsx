@@ -1,12 +1,18 @@
-'use client'
+"use client";
 
-import React, { createContext, useState, useCallback, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Howl } from 'howler-with-buffer';
-import { getBpm } from '../getBpm';
-import { loadSong, playPauseSong, nextSong, prevSong, toggleMuteTrack } from '../redux/actions';
-import { AppDispatch } from '../store';
-import { RootState } from '../types';
+import React, { createContext, useState, useCallback, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Howl } from "howler-with-buffer";
+import { getBpm } from "../getBpm";
+import {
+  loadSong,
+  playPauseSong,
+  nextSong,
+  prevSong,
+  toggleMuteTrack,
+} from "../redux/actions";
+import { AppDispatch } from "../store";
+import { RootState } from "../types";
 
 // Define the shape of your context state
 interface AudioContextState {
@@ -14,16 +20,16 @@ interface AudioContextState {
   isLoading: boolean;
   currentSongIndex: number;
   progress: number;
-  bpm: number | null,
-  analysisData1: number,
-  analysisData2: number,
-  currentSong: { [key: string]: Howl; } | null;
+  bpm: number | null;
+  analysisData1: number;
+  analysisData2: number;
+  currentSong: { [key: string]: Howl } | null;
   trackLinerNotes: {
-    id: number; 
-    title: string; 
+    id: number;
+    title: string;
     samples: {
       parts: {
-        text: string; 
+        text: string;
         link?: string;
       }[];
     }[];
@@ -34,7 +40,7 @@ interface AudioContextState {
   loadNewSong: (songIndex: number) => void;
   playPauseTracks: () => void;
   toggleMuteTrack: (trackIndex: number) => void;
-};
+}
 
 type AudioProviderProps = {
   children: React.ReactNode;
@@ -45,7 +51,7 @@ interface Track {
 }
 
 interface CurrentTrackState {
-  song: { [key: string]: Howl; } | null;
+  song: { [key: string]: Howl } | null;
   index: number;
   isPlaying: boolean;
   isMuted: boolean[];
@@ -56,25 +62,40 @@ interface TrackLoadingStatus {
 }
 
 // Create the context
-export const AudioPlayerContext = createContext<AudioContextState | undefined>(undefined);
+export const AudioPlayerContext = createContext<AudioContextState | undefined>(
+  undefined
+);
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   const dispatch = useDispatch<AppDispatch>();
   const audioState = useSelector((state: RootState) => state.audio);
-  const { currentSongIndex, trackIndex, isPlaying, isLoading, isMuted, trackLinerNotes } = useSelector((state: RootState) => state.audio);
-  const [ currentTrack, setCurrentTrack ] = useState<CurrentTrackState>({ song: null, index: 0, isPlaying: false, isMuted: [false, false, false] });
+  const {
+    currentSongIndex,
+    trackIndex,
+    isPlaying,
+    isLoading,
+    isMuted,
+    trackLinerNotes,
+  } = useSelector((state: RootState) => state.audio);
+  const [currentTrack, setCurrentTrack] = useState<CurrentTrackState>({
+    song: null,
+    index: 0,
+    isPlaying: false,
+    isMuted: [false, false, false],
+  });
 
   const [analysisData1, setAnalysisData1] = useState<number>(0);
   const [analysisData2, setAnalysisData2] = useState<number>(1);
   const [bpm, setBpm] = useState(120);
 
-  const [trackLoadingStatus, setTrackLoadingStatus] = useState<TrackLoadingStatus>({
-    track1: false,
-    track2: false,
-    track3: false
-  });
- 
-  const [progress, setProgress] = useState(0); 
+  const [trackLoadingStatus, setTrackLoadingStatus] =
+    useState<TrackLoadingStatus>({
+      track1: false,
+      track2: false,
+      track3: false,
+    });
+
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     setTrackLoadingStatus({ track1: true, track2: true, track3: true });
@@ -83,19 +104,26 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     const newSong: Track = {
       track1: new Howl({
         src: [`${basePath}/track1.mp3`],
-        onload: () => setTrackLoadingStatus(prev => ({ ...prev, track1: false }))
+        onload: () =>
+          setTrackLoadingStatus((prev) => ({ ...prev, track1: false })),
       }),
       track2: new Howl({
         src: [`${basePath}/track2.mp3`],
-        onload: () => setTrackLoadingStatus(prev => ({ ...prev, track2: false }))
+        onload: () =>
+          setTrackLoadingStatus((prev) => ({ ...prev, track2: false })),
       }),
       track3: new Howl({
         src: [`${basePath}/track3.mp3`],
-        onload: () => setTrackLoadingStatus(prev => ({ ...prev, track3: false }))
+        onload: () =>
+          setTrackLoadingStatus((prev) => ({ ...prev, track3: false })),
       }),
     };
 
-    setCurrentTrack({ ...currentTrack, song: newSong, index: currentSongIndex });
+    setCurrentTrack({
+      ...currentTrack,
+      song: newSong,
+      index: currentSongIndex,
+    });
 
     // Cleanup function
     return () => {
@@ -114,7 +142,6 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
 
   //     try {
   //       const bpm = await getBpm(buffer3);
-       
 
   //       if (!bpm || !analysisData1 || !analysisData2) {
   //         return;
@@ -135,79 +162,73 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   //   }
   // }, [currentTrack.song]);
 
+  const handlePlayPauseTracks = () => {
+    dispatch(playPauseSong());
+  };
 
-const handlePlayPauseTracks = () => {
-  dispatch(playPauseSong());
+  const handleMuteTrack = () => {
+    dispatch(toggleMuteTrack(trackIndex));
+  };
 
-};
+  const handleNextSong = () => {
+    dispatch(nextSong());
+  };
 
-const handleMuteTrack = () => {
-  dispatch(toggleMuteTrack(trackIndex));
-};
+  const handlePrevSong = () => {
+    dispatch(prevSong());
+  };
 
-const handleNextSong = () => {
-  dispatch(nextSong());
-};
+  const handleChangeVolume = () => {
+    // dispatch(setVolume(volume));
+  };
 
-const handlePrevSong = () => {
-  dispatch(prevSong());
-};
+  //load animations
+  useEffect(() => {
+    let animationFrameId: number;
 
-const handleChangeVolume = () => {
-  // dispatch(setVolume(volume));
-};
+    const updateProgress = () => {
+      if (currentTrack.song && currentTrack.isPlaying) {
+        const primaryTrack = currentTrack.song["track1"];
+        const progress = (primaryTrack.seek() / primaryTrack.duration()) * 100;
 
-//load animations
-useEffect(() => {
-  let animationFrameId: number;
+        setProgress(progress);
+        animationFrameId = requestAnimationFrame(updateProgress);
+      }
+    };
 
-  const updateProgress = () => {
-    if (currentTrack.song && currentTrack.isPlaying) {
-      const primaryTrack = currentTrack.song['track1'];
-      const progress = (primaryTrack.seek() / primaryTrack.duration()) * 100;
-
-      setProgress(progress);
+    if (currentTrack.isPlaying) {
       animationFrameId = requestAnimationFrame(updateProgress);
     }
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  });
+
+  const contextActions: AudioContextState = {
+    isPlaying,
+    isLoading,
+    currentSongIndex,
+    progress,
+    bpm,
+    analysisData1,
+    analysisData2,
+    currentSong: currentTrack.song,
+    trackLinerNotes,
+    nextSong: () => dispatch(nextSong()),
+    prevSong: () => dispatch(prevSong()),
+    isMuted,
+    loadNewSong: (index: number) => dispatch(loadSong(index)),
+    playPauseTracks: () => dispatch(playPauseSong()),
+    toggleMuteTrack: (trackIndex: number) =>
+      dispatch(toggleMuteTrack(trackIndex)),
   };
-
-  if (currentTrack.isPlaying) {
-    animationFrameId = requestAnimationFrame(updateProgress);
-  }
-
-  return () => {
-    cancelAnimationFrame(animationFrameId);
-  };
-
-})
-
-const contextActions: AudioContextState = {
-  isPlaying,
-  isLoading,
-  currentSongIndex,
-  progress,
-  bpm,
-  analysisData1,
-  analysisData2,
-  currentSong: currentTrack.song,
-  trackLinerNotes, 
-  nextSong: () => dispatch(nextSong()),
-  prevSong: () => dispatch(prevSong()),
-  isMuted, 
-  loadNewSong: (index: number) => dispatch(loadSong(index)),
-  playPauseTracks: () => dispatch(playPauseSong()),
-  toggleMuteTrack: (trackIndex: number) => dispatch(toggleMuteTrack(trackIndex)),
-};
-
 
   return (
-    <AudioPlayerContext.Provider value={
-      contextActions
-    }>
+    <AudioPlayerContext.Provider value={contextActions}>
       {children}
     </AudioPlayerContext.Provider>
   );
-  
 };
 
 export default AudioProvider;

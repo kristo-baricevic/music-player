@@ -1,7 +1,6 @@
-import { configureStore } from '@reduxjs/toolkit';
-import audioReducer from '../redux/reducers';
-import { thunk } from 'redux-thunk';
-
+import { configureStore } from "@reduxjs/toolkit";
+import audioReducer from "../redux/reducers";
+import { thunk } from "redux-thunk";
 
 const store = configureStore({
   reducer: {
