@@ -36,3 +36,10 @@ export const prevSong = (): ThunkAction<void, RootState, unknown, Action<string>
   dispatch({ type: AudioActionTypes.PREV_SONG, payload: prevIndex });
 };
 
+export const toggleMuteTrack = (trackIndex: number) => {
+  return {
+    type: AudioActionTypes.TOGGLE_MUTE_TRACK,
+    payload: trackIndex,
+  };
+};
+

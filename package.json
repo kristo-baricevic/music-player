@@ -27,6 +27,7 @@
     "web-audio-beat-detector": "^8.2.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/howler": "^2.2.11",
     "@types/node": "^20",

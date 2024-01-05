@@ -4,7 +4,9 @@ import React, { createContext, useState, useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Howl } from 'howler-with-buffer';
 import { getBpm } from '../getBpm';
-import { loadSong, playPauseSong, nextSong, prevSong } from '../redux/actions';
+import { loadSong, playPauseSong, nextSong, prevSong, toggleMuteTrack } from '../redux/actions';
+import { AppDispatch } from '../store';
+import { RootState } from '../types';
 
 // Define the shape of your context state
 interface AudioContextState {
@@ -15,7 +17,7 @@ interface AudioContextState {
   bpm: number | null,
   analysisData1: number,
   analysisData2: number,
-  currentSong: { [key: string]: Howl } | null; 
+  currentSong: { [key: string]: Howl; } | null;
   trackLinerNotes: {
     id: number; 
     title: string; 
@@ -43,7 +45,7 @@ interface Track {
 }
 
 interface CurrentTrackState {
-  song: Track | null;
+  song: { [key: string]: Howl; } | null;
   index: number;
   isPlaying: boolean;
   isMuted: boolean[];
@@ -57,8 +59,9 @@ interface TrackLoadingStatus {
 export const AudioPlayerContext = createContext<AudioContextState | undefined>(undefined);
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
-  const dispatch = useDispatch();
-  const { currentSongIndex, toggleMuteTrack, trackIndex, isPlaying, isMuted, trackLinerNotes } = useSelector(state => state.audio);
+  const dispatch = useDispatch<AppDispatch>();
+  const audioState = useSelector((state: RootState) => state.audio);
+  const { currentSongIndex, trackIndex, isPlaying, isLoading, isMuted, trackLinerNotes } = useSelector((state: RootState) => state.audio);
   const [ currentTrack, setCurrentTrack ] = useState<CurrentTrackState>({ song: null, index: 0, isPlaying: false, isMuted: [false, false, false] });
 
   const [analysisData1, setAnalysisData1] = useState<number>(0);
@@ -151,9 +154,8 @@ const handlePrevSong = () => {
 };
 
 const handleChangeVolume = () => {
-  dispatch(setVolume(volume));
+  // dispatch(setVolume(volume));
 };
-
 
 //load animations
 useEffect(() => {
@@ -179,14 +181,24 @@ useEffect(() => {
 
 })
 
-const contextActions = {
+const contextActions: AudioContextState = {
+  isPlaying,
+  isLoading,
+  currentSongIndex,
+  progress,
+  bpm,
+  analysisData1,
+  analysisData2,
+  currentSong: currentTrack.song,
+  trackLinerNotes, 
+  nextSong: () => dispatch(nextSong()),
+  prevSong: () => dispatch(prevSong()),
+  isMuted, 
   loadNewSong: (index: number) => dispatch(loadSong(index)),
-  playPauseTracks: handlePlayPauseTracks,
-  nextTrack: handleNextSong,
-  prevTrack: handlePrevSong,
-  changeVolume: handleChangeVolume,
-  // ... other actions
+  playPauseTracks: () => dispatch(playPauseSong()),
+  toggleMuteTrack: (trackIndex: number) => dispatch(toggleMuteTrack(trackIndex)),
 };
+
 
   return (
     <AudioPlayerContext.Provider value={

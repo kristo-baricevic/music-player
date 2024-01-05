@@ -18,6 +18,7 @@ const initialState: AudioState = {
     isLoading: false,
     isPlaying: true,
     error: false,
+    volume: 1,
 };
 
 const audioReducer = (
@@ -33,9 +34,10 @@ const audioReducer = (
         
         case AudioActionTypes.TOGGLE_MUTE_TRACK:
             const toggleMuteAction = action as { type: typeof AudioActionTypes.TOGGLE_MUTE_TRACK, payload: number };
-            const newIsMuted = [...state.isMuted];
-            newIsMuted[toggleMuteAction.payload] = !newIsMuted[toggleMuteAction.payload];
-                return { ...state, isMuted: newIsMuted };
+            const updatedIsMuted = state.isMuted.map((mute, index) =>
+                index === toggleMuteAction.payload ? !mute : mute
+            );
+          return { ...state, isMuted: updatedIsMuted };
     
         case AudioActionTypes.NEXT_SONG:
             const nextSongAction = action as { type: typeof AudioActionTypes.NEXT_SONG, payload: number };
