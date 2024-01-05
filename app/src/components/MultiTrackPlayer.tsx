@@ -120,7 +120,7 @@ const MultiTrackPlayer = () => {
         <div className="music-info">
           <img
             className="cover-image"
-            src={`/backend/storage/images/cover${currentSongIndex}.png`}
+            src={`/backend/storage/images/cover${currentSongIndex + 1}.png`}
           />
           <div className="flex flex-col px-2">
           <h4 className="flex">{currentTrack ? currentTrack.title : 'Loading...'}</h4>
