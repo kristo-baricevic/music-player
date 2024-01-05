@@ -1,3 +1,5 @@
+const songsController = require('../backend/controllers/songsController');
+
 const express = require('express');
 
 const app = express();
@@ -20,10 +22,8 @@ app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
 
-app.get('/api/songs', (req, res) => {
-    // Logic to fetch songs
-    res.json({ songs: ['song1', 'song2', 'song3'] });
-});
+app.get('/api/songs', getSongs);
+app.get('/api/songs/:id', getSongById);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

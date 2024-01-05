@@ -1,3 +1,6 @@
+import { AudioActions, AudioActionTypes } from "./actionTypes";
+
+AudioActionTypes
 const initialState = {
     currentSongIndex: 0,
     trackLinerNotes: [],
@@ -7,26 +10,26 @@ const initialState = {
     error: false,
 };
 
-export const audioReducer = ( state = initialState, action) => {
+export const audioReducer = ( state = initialState, action: AudioActions) => {
     switch (action.type) {
-        case actionTypes.PLAY_PAUSE_TRACKS:
+        case AudioActionTypes.PLAY_PAUSE_TRACKS:
             return { ...state, isPlaying: !state.isPlaying };
     
-        case actionTypes.LOAD_NEW_SONG:
+        case AudioActionTypes.LOAD_SONG:
             return { ...state, currentSongIndex: action.payload, isPlaying: false };
     
-        case actionTypes.TOGGLE_MUTE_TRACK:
+        case AudioActionTypes.TOGGLE_MUTE_TRACK:
             const newIsMuted = [...state.isMuted];
             newIsMuted[action.payload] = !newIsMuted[action.payload];
                 return { ...state, isMuted: newIsMuted };
     
-        case actionTypes.NEXT_SONG:
+        case AudioActionTypes.NEXT_SONG:
             return { ...state, currentSongIndex: action.payload, isPlaying: false };
 
-        case actionTypes.PREV_SONG:
+        case AudioActionTypes.PREV_SONG:
             return { ...state, currentSongIndex: action.payload, isPlaying: false };
     
-        case actionTypes.SET_VOLUME:
+        case AudioActionTypes.SET_VOLUME:
             return { ...state, volume: action.payload };
         
             default:
