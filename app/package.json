@@ -1,11 +1,13 @@
 {
   "name": "media-player",
   "version": "1.0.0",
-  "description": "typescript howl media player with vizualizer",
+  "description": "typescript howl media player with visualizer",
   "main": "layout.tsx",
   "scripts": {
     "test": "npm test",
-    "start": "react-scripts start"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "repository": {
     "type": "git",

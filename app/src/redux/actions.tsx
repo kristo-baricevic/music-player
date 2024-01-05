@@ -2,7 +2,7 @@ import { ThunkAction } from "redux-thunk";
 import { RootState } from "../types";
 import { Action } from "redux";
 import { AudioActionTypes } from "./actionTypes";
-import { songsData } from "@/app/backend/controllers/songController";
+import { songsData } from "../../backend/controllers/songController";
 
 type ThunkResult<R> = ThunkAction<R, RootState, undefined, Action<string>>;
 

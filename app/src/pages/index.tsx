@@ -1,7 +1,7 @@
 import { useEffect, useContext } from 'react';
-import { AudioPlayerContext } from '@/app/src/components/AudioPlayerContext';
-import MultiTrackPlayer from '@/app/src/components/MultiTrackPlayer';
-import LinerNotes from '@/app/src/components/LinerNotes';
+import { AudioPlayerContext } from '../components/AudioPlayerContext';
+import MultiTrackPlayer from '../components/MultiTrackPlayer';
+import LinerNotes from '../components/LinerNotes';
 import { animationForSong, clearAnimations } from '../animations'; 
 
 export default function Home() {

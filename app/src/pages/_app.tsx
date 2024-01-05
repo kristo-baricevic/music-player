@@ -1,19 +1,19 @@
 import type { AppProps } from 'next/app';
+import { Provider } from 'react-redux';
 import { Inter } from 'next/font/google';
-import './globals.css';
-import AudioProvider from '@/app/src/components/AudioPlayerContext';
+import "../globals.css"
+import AudioProvider from '../components/AudioPlayerContext';
+import store from '../store';
 
 const inter = Inter({ subsets: ['latin'] });
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <Provider store={store}>
         <AudioProvider>
-          <Component {...pageProps} />
+            <Component {...pageProps} />
         </AudioProvider>
-      </body>
-    </html>
+    </Provider>
   );
 }
 

@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { AudioPlayerContext } from './AudioPlayerContext';
-import { animationForSong } from '@/app/src/animations';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause, faForward, faBackward, faGuitar, faDrum, faMicrophone, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { animationForSong } from '../animations';
 
 declare global {
   interface Window {
