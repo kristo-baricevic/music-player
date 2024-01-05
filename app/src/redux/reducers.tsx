@@ -1,7 +1,17 @@
+import { Action } from "redux";
 import { AudioActions, AudioActionTypes } from "./actionTypes";
 
-AudioActionTypes
-const initialState = {
+interface AudioState {
+    currentSongIndex: number;
+    trackLinerNotes: any[]; 
+    isMuted: boolean[];
+    isLoading: boolean;
+    isPlaying: boolean;
+    error: boolean;
+    volume?: number;
+  }
+
+const initialState: AudioState = {
     currentSongIndex: 0,
     trackLinerNotes: [],
     isMuted: [false, false, false],
@@ -10,29 +20,38 @@ const initialState = {
     error: false,
 };
 
-export const audioReducer = ( state = initialState, action: AudioActions) => {
+const audioReducer = (
+    state: AudioState = initialState, 
+    action: Action<string> ): AudioState => {
     switch (action.type) {
         case AudioActionTypes.PLAY_PAUSE_TRACKS:
             return { ...state, isPlaying: !state.isPlaying };
-    
+
         case AudioActionTypes.LOAD_SONG:
-            return { ...state, currentSongIndex: action.payload, isPlaying: false };
-    
+            const loadSongAction = action as { type: typeof AudioActionTypes.LOAD_SONG, payload: number };
+            return { ...state, currentSongIndex: loadSongAction.payload, isPlaying: false };
+        
         case AudioActionTypes.TOGGLE_MUTE_TRACK:
+            const toggleMuteAction = action as { type: typeof AudioActionTypes.TOGGLE_MUTE_TRACK, payload: number };
             const newIsMuted = [...state.isMuted];
-            newIsMuted[action.payload] = !newIsMuted[action.payload];
+            newIsMuted[toggleMuteAction.payload] = !newIsMuted[toggleMuteAction.payload];
                 return { ...state, isMuted: newIsMuted };
     
         case AudioActionTypes.NEXT_SONG:
-            return { ...state, currentSongIndex: action.payload, isPlaying: false };
+            const nextSongAction = action as { type: typeof AudioActionTypes.NEXT_SONG, payload: number };
+            return { ...state, currentSongIndex: nextSongAction.payload, isPlaying: false };
 
         case AudioActionTypes.PREV_SONG:
-            return { ...state, currentSongIndex: action.payload, isPlaying: false };
+            const prevSongAction = action as { type: typeof AudioActionTypes.PREV_SONG, payload: number };
+            return { ...state, currentSongIndex: prevSongAction.payload, isPlaying: false };
     
         case AudioActionTypes.SET_VOLUME:
-            return { ...state, volume: action.payload };
+            const setVolumeAction = action as { type: typeof AudioActionTypes.SET_VOLUME, payload: number };
+            return { ...state, volume: setVolumeAction.payload };
         
             default:
             return state;
     }
 }
+
+export default audioReducer;

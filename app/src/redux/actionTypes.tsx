@@ -7,35 +7,38 @@ export enum AudioActionTypes{
     SET_VOLUME = 'SET_VOLUME',
 };
 
-interface PlayPauseTracksAction {
+interface BaseAction {
+    type: string;
+}
+
+interface PlayPauseTracksAction extends BaseAction {
     type: typeof AudioActionTypes.PLAY_PAUSE_TRACKS;
-  }
+}
   
-  interface LoadSongAction {
+interface LoadSongAction extends BaseAction {
     type: typeof AudioActionTypes.LOAD_SONG;
     payload: number;
-  }
-  
-  interface ToggleMuteTrackAction {
+}
+
+interface ToggleMuteTrackAction extends BaseAction {
     type: typeof AudioActionTypes.TOGGLE_MUTE_TRACK;
     payload: number; 
-  }
-  
-  interface NextSongAction {
+}
+
+interface NextSongAction extends BaseAction {
     type: typeof AudioActionTypes.NEXT_SONG;
     payload: number;
-  }
-  
-  interface PrevSongAction {
+}
+
+interface PrevSongAction extends BaseAction {
     type: typeof AudioActionTypes.PREV_SONG;
     payload: number;
-  }
-  
-  interface SetVolumeAction {
+}
+
+interface SetVolumeAction extends BaseAction {
     type: typeof AudioActionTypes.SET_VOLUME;
     payload: number; 
-  }
-  
+}
 
 export type AudioActions =
   | PlayPauseTracksAction
