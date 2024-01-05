@@ -5,7 +5,7 @@
   "main": "layout.tsx",
   "scripts": {
     "test": "npm test",
-    "start": "ts-node backend/server.tsx"
+    "start": "react-scripts start"
   },
   "repository": {
     "type": "git",
