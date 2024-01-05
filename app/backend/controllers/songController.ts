@@ -252,7 +252,7 @@ export const songsData = [
   },
 ];
 
-const loadInitialSong = (req: Request, res: Response) => {
+export const loadInitialSong = (req: Request, res: Response) => {
   try {
     if (!songsData) {
       throw new Error("No song data is available");
@@ -267,7 +267,7 @@ const loadInitialSong = (req: Request, res: Response) => {
   }
 };
 
-const getSongById = (req: Request, res: Response) => {
+export const getSongById = (req: Request, res: Response) => {
   try {
     const songId = parseInt(req.params.id);
     const song = songsData.find((s) => s.id === songId);

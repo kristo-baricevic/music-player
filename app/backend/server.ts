@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import cors from "cors";
-
-const songsController = require("../backend/controller/songsController");
+import { loadInitialSong, getSongById } from "./controllers/songController";
 
 const express = require("express");
 
@@ -27,8 +26,8 @@ app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
 
-app.get("/api/songs", songsController.getSongs);
-app.get("/api/songs/:id", songsController.getSongById);
+app.get("/api/songs", loadInitialSong);
+app.get("/api/songs/:id", getSongById);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
