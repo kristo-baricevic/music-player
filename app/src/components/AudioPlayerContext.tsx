@@ -100,7 +100,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   useEffect(() => {
     setTrackLoadingStatus({ track1: true, track2: true, track3: true });
 
-    const basePath = `/music/song${currentSongIndex + 1}`;
+    const basePath = `http://localhost:5000/static/music/song${currentSongIndex + 1}`;
     const newSong: Track = {
       track1: new Howl({
         src: [`${basePath}/track1.mp3`],

@@ -64,7 +64,6 @@ const MultiTrackPlayer = () => {
 
   const currentTrack = trackLinerNotes && trackLinerNotes[currentSongIndex];
 
-
   // useEffect(() => {
   //   if (trackLinerNotes && trackLinerNotes.length > 0) {
   //     loadNewSong(currentSongIndex);
@@ -79,9 +78,6 @@ const MultiTrackPlayer = () => {
   //   loadNewSong,
   //   trackLinerNotes,
   // ]);
-
-
-
 
 
   const setProgress = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -120,7 +116,7 @@ const MultiTrackPlayer = () => {
         <div className="music-info">
           <img
             className="cover-image"
-            src={`/backend/storage/images/cover${currentSongIndex + 1}.png`}
+            src={`http://localhost:5000/static/music/song${currentSongIndex + 1}`}
           />
           <div className="flex flex-col px-2">
           <h4 className="flex">{currentTrack ? currentTrack.title : 'Loading...'}</h4>
