@@ -16,7 +16,7 @@ app.use(
   })
 );
 
-app.use("/static", express.static("storage"));
+app.use('/static', express.static('app/backend/storage'));
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");

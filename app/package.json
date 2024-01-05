@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/kristo-baricevic/music-player/issues"
   },
-  "homepage": "https://github.com/kristo-baricevic/music-player#readme"
+  "homepage": "https://github.com/kristo-baricevic/music-player#readme",
+  "dependencies": {
+    "tailwind": "^4.0.0"
+  }
 }

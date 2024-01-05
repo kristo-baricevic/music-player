@@ -76,7 +76,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     isLoading,
     isMuted,
     trackLinerNotes,
-  } = useSelector((state: RootState) => state.audio);
+  } = audioState;
   const [currentTrack, setCurrentTrack] = useState<CurrentTrackState>({
     song: null,
     index: 0,
