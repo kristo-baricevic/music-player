@@ -1,0 +1,20 @@
+{
+  "name": "media-player",
+  "version": "1.0.0",
+  "description": "typescript howl media player with vizualizer",
+  "main": "layout.tsx",
+  "scripts": {
+    "test": "npm test",
+    "start": "ts-node backend/server.tsx"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kristo-baricevic/music-player.git"
+  },
+  "author": "kr1st0 bar1cev1c",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kristo-baricevic/music-player/issues"
+  },
+  "homepage": "https://github.com/kristo-baricevic/music-player#readme"
+}
