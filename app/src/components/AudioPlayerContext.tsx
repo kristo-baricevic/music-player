@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useState, useCallback, useEffect } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Howl } from "howler-with-buffer";
 import { getBpm } from "../getBpm";
