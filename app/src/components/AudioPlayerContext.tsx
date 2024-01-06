@@ -54,6 +54,7 @@ interface CurrentTrackState {
   song: { [key: string]: Howl } | null;
   index: number;
   isPlaying: boolean;
+  isLoading: boolean;
   isMuted: boolean[];
 }
 
@@ -81,6 +82,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     song: null,
     index: 0,
     isPlaying: false,
+    isLoading: false,
     isMuted: [false, false, false],
   });
 
@@ -102,6 +104,8 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     console.log(currentSongIndex+1);
 
     const basePath = `http://localhost:5000/static/music/song${currentSongIndex + 1}`;
+    
+    //create new Howler objects
     const newSong: Track = {
       track1: new Howl({
         src: [`${basePath}/track1.mp3`],
@@ -125,6 +129,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       song: newSong,
       index: currentSongIndex,
     });
+    
   }, [currentSongIndex, dispatch]);
 
   //useEffect to analyze song data in order to extract numerical data that generates values for animation variables
