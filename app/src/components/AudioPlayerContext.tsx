@@ -99,6 +99,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
 
   useEffect(() => {
     setTrackLoadingStatus({ track1: true, track2: true, track3: true });
+    console.log(currentSongIndex+1);
 
     const basePath = `http://localhost:5000/static/music/song${currentSongIndex + 1}`;
     const newSong: Track = {
@@ -124,13 +125,6 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       song: newSong,
       index: currentSongIndex,
     });
-
-    // Cleanup function
-    return () => {
-      newSong.track1.unload();
-      newSong.track2.unload();
-      newSong.track3.unload();
-    };
   }, [currentSongIndex, dispatch]);
 
   //useEffect to analyze song data in order to extract numerical data that generates values for animation variables

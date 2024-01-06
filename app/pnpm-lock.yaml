@@ -5,6 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  howl:
+    specifier: ^0.2.0
+    version: 0.2.0
+  howler:
+    specifier: ^2.2.4
+    version: 2.2.4
   tailwind:
     specifier: ^4.0.0
     version: 4.0.0
@@ -638,6 +644,16 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       function-bind: 1.1.2
+    dev: false
+
+  /howl@0.2.0:
+    resolution: {integrity: sha512-JFeFOuzpTSB5iXTcZBjyfGXwb4bvx0nbLoETK47EOBrDRuVNwHY69HEQWQp9qx16gdcdiTtzr3JGK+UyXaI7mA==}
+    dependencies:
+      typescript: 5.3.3
+    dev: false
+
+  /howler@2.2.4:
+    resolution: {integrity: sha512-iARIBPgcQrwtEr+tALF+rapJ8qSc+Set2GJQl7xT1MQzWaVkFebdJhR3alVlSiUf5U7nAANKuj3aWpwerocD5w==}
     dev: false
 
   /http-errors@1.6.3:
@@ -1359,6 +1375,12 @@ packages:
       call-bind: 1.0.5
       for-each: 0.3.3
       is-typed-array: 1.1.12
+    dev: false
+
+  /typescript@5.3.3:
+    resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
     dev: false
 
   /unbox-primitive@1.0.2:

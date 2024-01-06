@@ -3,6 +3,7 @@ import cors from "cors";
 import { loadInitialSong, getSongById } from "./controllers/songController";
 
 const express = require("express");
+const path = require("path");
 
 const app = express();
 
@@ -16,7 +17,8 @@ app.use(
   })
 );
 
-app.use('/static', express.static('app/backend/storage'));
+app.use('/static', express.static(path.join(__dirname, 'storage')));
+console.log(path.join(__dirname, 'storage'));
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
