@@ -103,7 +103,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     setTrackLoadingStatus({ track1: true, track2: true, track3: true });
     console.log(currentSongIndex+1);
 
-    const basePath = `http://localhost:5000/static/music/song${currentSongIndex + 1}`;
+    const basePath = `/storage/music/song${currentSongIndex + 1}`;
     
     //create new Howler objects
     const newSong: Track = {

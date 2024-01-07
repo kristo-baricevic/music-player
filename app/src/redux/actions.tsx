@@ -2,7 +2,6 @@ import { ThunkAction } from "redux-thunk";
 import { RootState } from "../types";
 import { Action } from "redux";
 import { AudioActionTypes } from "./actionTypes";
-import { songsData } from "../../backend/controllers/songController";
 
 type ThunkResult<R> = ThunkAction<R, RootState, undefined, Action<string>>;
 
@@ -23,7 +22,7 @@ export const nextSong =
   (): ThunkAction<void, RootState, unknown, Action<string>> =>
   (dispatch, getState) => {
     const { audio } = getState();
-    const nextIndex = (audio.currentSongIndex + 1) % songsData.length;
+    const nextIndex = (audio.currentSongIndex + 1) % audio.trackLinerNotes.length;
     dispatch({ type: AudioActionTypes.NEXT_SONG, payload: nextIndex });
   };
 
@@ -31,7 +30,7 @@ export const prevSong =
   (): ThunkAction<void, RootState, unknown, Action<string>> =>
   (dispatch, getState) => {
     const { audio } = getState();
-    const prevIndex = (audio.currentSongIndex - 1) % songsData.length;
+    const prevIndex = (audio.currentSongIndex - 1) % audio.trackLinerNotes.length;
     //   const prevIndex = (audio.currentSongIndex - 1 + audio.trackLinerNotes.length) % audio.trackLinerNotes.length;
     dispatch({ type: AudioActionTypes.PREV_SONG, payload: prevIndex });
   };
